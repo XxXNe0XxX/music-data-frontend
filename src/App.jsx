@@ -1,21 +1,22 @@
 import { useState } from "react";
-import Map from "./components/Map";
 import VideoList from "./components/VideoList";
 import { getPopularVideos } from "./services/youtubeService";
-import "./styles/App.css";
-
+import Globe from "./components/Globe";
+import { convertIsoA3ToIsoA2 } from "./utils/countryCodeConverter";
+import Starfield from "./components/starfield";
 function App() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState("");
 
-  const handleCountryClick = async (countryCode) => {
-    setSelectedCountry(countryCode);
+  const handleCountryClick = async (countryISOA3, countryName) => {
+    setSelectedCountry(countryISOA3);
     setLoading(true);
     setError(null);
+    let countryCode = convertIsoA3ToIsoA2(countryISOA3);
     try {
-      const data = await getPopularVideos(countryCode);
+      const data = await getPopularVideos(convertIsoA3ToIsoA2(countryCode));
       setVideos(data.items);
     } catch (err) {
       console.error("Error fetching videos:", err);
@@ -26,16 +27,22 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <div className="map-container">
-        <Map onCountryClick={handleCountryClick} />
-      </div>
-      <div className="video-panel">
-        <h2>Videos Populares</h2>
-        {selectedCountry && <p>País seleccionado: {selectedCountry}</p>}
-        {loading && <p>Cargando videos...</p>}
-        {error && <p>{error}</p>}
-        <VideoList videos={videos} />
+    <div className="relative bg-black ">
+      <Globe handleCountryClick={handleCountryClick}></Globe>
+      <Starfield
+        starCount={300}
+        starColor={[255, 255, 255]}
+        speedFactor={0.05}
+        backgroundColor="black"
+        className="-z-50 absolute"
+      />
+      <div className=" absolute right-0 top-0 max-h-screen overflow-y-scroll z-20">
+        <VideoList
+          videos={videos}
+          selectedCountry={selectedCountry}
+          loading={loading}
+          error={error}
+        />
       </div>
     </div>
   );
