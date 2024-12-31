@@ -36,7 +36,7 @@ function App() {
         backgroundColor="black"
         className="-z-50 absolute"
       />
-      <div className=" absolute right-0 top-0 max-h-screen overflow-y-scroll z-20">
+      <div className=" absolute right-0 top-0 z-20">
         <VideoList
           videos={videos}
           selectedCountry={selectedCountry}

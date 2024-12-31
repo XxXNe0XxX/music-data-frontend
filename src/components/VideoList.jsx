@@ -13,7 +13,7 @@ function VideoList({ videos, selectedCountry, loading, error }) {
   const [flag, setFlag] = useState("");
   const [flagLoading, setFlagLoading] = useState(false);
   const [flagError, setFlagError] = useState(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function fetchFlag() {
@@ -28,6 +28,7 @@ function VideoList({ videos, selectedCountry, loading, error }) {
       try {
         const flagData = await getFlag(selectedCountry);
         setFlag(flagData);
+        setIsOpen(true);
       } catch (err) {
         console.error("Error fetching flag:", err);
         setFlagError("Error loading flag");
@@ -38,21 +39,30 @@ function VideoList({ videos, selectedCountry, loading, error }) {
     }
 
     fetchFlag();
-    setIsOpen(true);
   }, [selectedCountry]);
 
   return (
     <>
       <div
-        className={`transition-all flex gap-y-1 flex-col max-w-[600px]  ${
-          isOpen ? "h-full" : "h-14"
-        } transit border-gray-700 border   rounded-xl m-5 backdrop-blur-md shadow-lg shadow-black overflow-hidden`}
+        className={`transition-all flex gap-y-1 flex-grow flex-col max-w-[600px] min-w-[350px]  ${
+          isOpen ? "h-[95vh]" : "h-16"
+        } border-gray-700 border rounded-xl m-5 backdrop-blur-md shadow-lg shadow-black overflow-y-hidden`}
       >
-        <div className="flex items-center justify-between gap-x-2 text-nowrap  bg-gray-800 px-2 min-h-14 h-auto">
-          <h1 className="text-xl w-full">Videos populares</h1>
-          <div className="w-full text-nowrap">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 text-nowrap bg-gray-800 p-2 min-h-16 w-full ">
+          <div className="flex items-center justify-between w-full">
+            <h1 className="text-xl w-full">Videos populares</h1>
+            <button
+              onClick={() => setIsOpen((prev) => !prev)}
+              className=" text-2xl"
+            >
+              <MdOutlineKeyboardDoubleArrowUp
+                className={`${isOpen ? "" : "rotate-180"} transition-all`}
+              ></MdOutlineKeyboardDoubleArrowUp>
+            </button>
+          </div>
+          <div className="w-full text-nowrap h-12">
             {loading && (
-              <h1 className=" text-white rounded-md p-1 bg-blue-700 text-center ">
+              <h1 className=" text-white rounded-md p-1 bg-blue-700 text-center leading-4">
                 Cargando videos...
               </h1>
             )}
@@ -62,14 +72,6 @@ function VideoList({ videos, selectedCountry, loading, error }) {
               </h1>
             )}
           </div>
-          <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className=" text-2xl"
-          >
-            <MdOutlineKeyboardDoubleArrowUp
-              className={`${isOpen ? "" : "rotate-180"} transition-all`}
-            ></MdOutlineKeyboardDoubleArrowUp>
-          </button>
         </div>
         <div className="flex items-center gap-x-2 px-2 mt-1">
           Seleccionado: {selectedCountry || "..."}
@@ -77,12 +79,12 @@ function VideoList({ videos, selectedCountry, loading, error }) {
           {flagError && <h1>Error al cargar la bandera...</h1>}
           {flag && <img src={flag} className="w-10 h-6 object-cover"></img>}
         </div>
-        <div className="p-2">
+        <div className="p-2 overflow-y-scroll  ">
           {!videos.length ? (
             <p>No hay videos para mostrar.</p>
           ) : (
-            <ul className="flex flex-col space-y-2 rounded-xl p-2 ">
-              {videos.map((video) => (
+            <ul className="flex flex-col space-y-2 rounded-xl p-2   ">
+              {videos?.map((video) => (
                 <li
                   key={video.id}
                   className="video-item hover:bg-gray-800 grid group border-b bg-gray-800 border-r rounded-2xl p-2  hover:border-opacity-100 border-opacity-20 "

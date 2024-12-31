@@ -2,9 +2,10 @@ import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 
-// 1) Helpers for spherical geometry
+// Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
+
 function angle(lambda0, phi0, lambda1, phi1) {
   lambda0 *= radians;
   phi0 *= radians;
@@ -23,15 +24,16 @@ function angle(lambda0, phi0, lambda1, phi1) {
 }
 
 function isVisible(lon, lat, [lambdaRotate, phiRotate, gamma]) {
-  // For an orthographic-like projection, the center is at (-λr, -φr).
+  // For Orthographic, “front” if angle < 90° (the horizon).
   const dist = angle(lon, lat, -lambdaRotate, -phiRotate);
-  return dist < 70;
+  return dist < 90;
 }
 
-// Main Globe component
 const Globe = ({ handleCountryClick }) => {
   const [geoJson, setGeoJson] = useState(null);
-  const [countries, setCountries] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [hoveredCountry, setHoveredCountry] = useState(null);
+
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
     scale: 400,
@@ -46,13 +48,12 @@ const Globe = ({ handleCountryClick }) => {
   });
 
   const svgRef = useRef();
-  const svgGratRef = useRef();
   const dimensions = useRef({
     width: window.innerWidth,
     height: window.innerHeight,
   });
 
-  // Add resize handler
+  // Resize effect
   useEffect(() => {
     const handleResize = () => {
       dimensions.current = {
@@ -65,20 +66,19 @@ const Globe = ({ handleCountryClick }) => {
         translateY: window.innerHeight / 2,
       }));
     };
-
-    handleResize(); // Set initial dimensions
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Load GeoJSON
+  // Load GeoJSON once
   useEffect(() => {
     d3.json("/geojson/countries.json").then((data) => {
       setGeoJson(data);
     });
   }, []);
 
-  // Update projection and attach interactions
+  // Recompute paths + attach interactions
   useEffect(() => {
     if (!geoJson || !svgRef.current) return;
 
@@ -99,12 +99,11 @@ const Globe = ({ handleCountryClick }) => {
       d: geoGenerator(feature),
       centroidLonLat: d3.geoCentroid(feature),
     }));
-
     setCountries(countriesData);
 
     const svg = d3.select(svgRef.current);
 
-    // Drag behavior
+    // Drag to rotate
     svg.call(
       d3.drag().on("drag", (event) => {
         setGlobeState((prev) => ({
@@ -118,7 +117,7 @@ const Globe = ({ handleCountryClick }) => {
       })
     );
 
-    // Improved zoom behavior
+    // Zoom to scale
     const zoom = d3
       .zoom()
       .scaleExtent([1, 12])
@@ -131,7 +130,7 @@ const Globe = ({ handleCountryClick }) => {
 
     svg.call(zoom);
 
-    // Optional: Reset zoom on double click
+    // Double-click reset
     svg.on("dblclick.zoom", null);
     svg.on("dblclick", () => {
       svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
@@ -145,88 +144,156 @@ const Globe = ({ handleCountryClick }) => {
     globeState.translateY,
   ]);
 
-  // 4) Render the globe
   return (
     <svg
       ref={svgRef}
-      width={window.innerWidth}
-      height={window.innerHeight}
-      className=" absolute z-10"
+      width={dimensions.current.width}
+      height={dimensions.current.height}
+      className="absolute z-10"
     >
+      {/* Globe boundary circle */}
       <circle
         cx={globeState.translateX}
         cy={globeState.translateY}
         r={globeState.scale * globeState.zoom}
         fill="darkblue"
         stroke="lightblue"
-        strokeWidth="10"
-        className="blur-sm "
+        strokeWidth="20"
+        className="blur-md"
       />
 
-      {countries?.map((country, i) => {
-        const { d, centroidLonLat } = country;
-        const [lon, lat] = centroidLonLat; // in degrees
-
-        // Check if on visible side:
-        const visible = isVisible(lon, lat, [
-          globeState.rotateLambda,
-          globeState.rotatePhi,
-          globeState.rotateGamma,
-        ]);
-
-        return (
-          <g key={i} className="group relative">
+      {/* --- 1) Render country paths first --- */}
+      <g className="countries">
+        {countries.map((country, i) => {
+          const { d, centroidLonLat } = country;
+          return (
             <path
+              key={i}
               d={d}
               fill="darkgreen"
               stroke="white"
               strokeWidth="0.5"
               className="transition-colors z-10"
               onClick={() => {
+                // example callback
                 handleCountryClick(
-                  country.properties.iso_a3,
+                  convertIsoA3ToIsoA2(country.properties.iso_a3),
                   country.properties.name
                 );
                 console.log(`Clicked on: ${country.properties.name}`);
               }}
               onMouseOver={(e) => {
+                // Set hovered country in state
                 e.target.style.fill = "green";
+                setHoveredCountry(country);
               }}
               onMouseOut={(e) => {
                 e.target.style.fill = "darkgreen";
+
+                setHoveredCountry(null);
               }}
             />
-            {/* If visible, show the label. Otherwise, skip it. */}
-            {visible && (
+          );
+        })}
+      </g>
+
+      {/* 
+         --- 2) Show text labels afterwards --- 
+         We'll show *all* visible labels at once (like your previous approach), 
+         plus we'll show a *hover label* that can be styled differently if desired.
+      */}
+      <g className="labels">
+        {countries.map((country, i) => {
+          const { centroidLonLat } = country;
+          const [lon, lat] = centroidLonLat;
+
+          // check if on visible hemisphere
+          const visible = isVisible(lon, lat, [
+            globeState.rotateLambda,
+            globeState.rotatePhi,
+            globeState.rotateGamma,
+          ]);
+          if (!visible) return null;
+
+          // project to screen coords
+          const projection = d3["geo" + globeState.type]()
+            .scale(globeState.scale * globeState.zoom)
+            .translate([globeState.translateX, globeState.translateY])
+            .center([globeState.centerLon, globeState.centerLat])
+            .rotate([
+              globeState.rotateLambda,
+              globeState.rotatePhi,
+              globeState.rotateGamma,
+            ]);
+
+          const point = projection(centroidLonLat);
+          if (!point) return null;
+          const [x, y] = point;
+
+          // We'll fade out the "normal" label if user is not zoomed in enough
+          const textOpacity = globeState.zoom < 2 ? 0 : 1;
+
+          return (
+            <text
+              key={i}
+              x={x}
+              y={y}
+              fill="white"
+              fontSize="14"
+              textAnchor="middle"
+              style={{
+                pointerEvents: "none",
+                opacity: textOpacity,
+                transition: "opacity 0.3s ease",
+              }}
+            >
+              {country.properties.name}
+            </text>
+          );
+        })}
+      </g>
+
+      {/* 
+          --- 3) Show a single "hover tooltip" label
+          We'll display the hovered country name in a 
+          different style, or near the centroid as well.
+      */}
+      {hoveredCountry && (
+        <g className="hover-label">
+          {(() => {
+            const { centroidLonLat } = hoveredCountry;
+            const projection = d3["geo" + globeState.type]()
+              .scale(globeState.scale * globeState.zoom)
+              .translate([globeState.translateX, globeState.translateY])
+              .center([globeState.centerLon, globeState.centerLat])
+              .rotate([
+                globeState.rotateLambda,
+                globeState.rotatePhi,
+                globeState.rotateGamma,
+              ]);
+            const point = projection(centroidLonLat);
+            if (!point) return null;
+            const [x, y] = point;
+
+            // You can style this differently than the normal labels
+            return (
               <text
-                fill="white"
-                fontSize="13"
+                x={x}
+                y={y}
+                fill="yellow"
+                fontSize="14"
+                fontWeight=""
                 textAnchor="middle"
-                style={{ pointerEvents: "none" }}
-                className={`absolute group-hover:opacity-100 group-hover:text-2xl transition-all duration-500  ${
-                  globeState.zoom < 2 ? "opacity-0" : "opacity-100"
-                }`}
-                {...(() => {
-                  // Project the [lon, lat] to get [x, y].
-                  const projection = d3["geo" + globeState.type]()
-                    .scale(globeState.scale * globeState.zoom)
-                    .translate([globeState.translateX, globeState.translateY])
-                    .center([globeState.centerLon, globeState.centerLat])
-                    .rotate([
-                      globeState.rotateLambda,
-                      globeState.rotatePhi,
-                      globeState.rotateGamma,
-                    ]);
-                  const [x, y] = projection(centroidLonLat);
-                  return { x, y };
-                })()}
+                style={{
+                  pointerEvents: "none",
+                }}
               >
-                {country?.properties?.name}
+                {hoveredCountry.properties.name}
               </text>
-            )}
-          </g>
-        );
-      })}
+            );
+          })()}
+        </g>
+      )}
     </svg>
   );
 };
