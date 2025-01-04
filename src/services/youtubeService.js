@@ -7,9 +7,18 @@ const BASE_URL = "http://localhost:3001/api/youtube";
  * @returns {Promise<Object>} - Lista de videos populares.
  */
 export async function getPopularVideos(regionCode) {
-  const response = await fetch(`${BASE_URL}/popular/${regionCode}`);
+  const response = await fetch(`${BASE_URL}/popular/videos/${regionCode}`);
   if (!response.ok) {
     throw new Error(`Error al obtener los videos: ${response.statusText}`);
+  }
+  return response.json();
+}
+export async function getChannelInfo(channelId) {
+  const response = await fetch(`${BASE_URL}/popular/channel/${channelId}`);
+  if (!response.ok) {
+    throw new Error(
+      `Error al obtener la información del canal: ${response.statusText}`
+    );
   }
   return response.json();
 }

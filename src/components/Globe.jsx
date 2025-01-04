@@ -33,7 +33,7 @@ const Globe = ({ handleCountryClick }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [countries, setCountries] = useState([]);
   const [hoveredCountry, setHoveredCountry] = useState(null);
-
+  const [grat, setGrat] = useState("");
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
     scale: 400,
@@ -52,7 +52,6 @@ const Globe = ({ handleCountryClick }) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-
   // Resize effect
   useEffect(() => {
     const handleResize = () => {
@@ -93,8 +92,10 @@ const Globe = ({ handleCountryClick }) => {
       ]);
 
     const geoGenerator = d3.geoPath().projection(projection);
+    const graticule = d3.geoGraticule10();
+    setGrat(geoGenerator(graticule));
 
-    const countriesData = geoJson.features.map((feature) => ({
+    const countriesData = geoJson?.features.map((feature) => ({
       ...feature,
       d: geoGenerator(feature),
       centroidLonLat: d3.geoCentroid(feature),
@@ -149,30 +150,32 @@ const Globe = ({ handleCountryClick }) => {
       ref={svgRef}
       width={dimensions.current.width}
       height={dimensions.current.height}
-      className="absolute z-10"
+      className="absolute z-10 "
     >
       {/* Globe boundary circle */}
+      <path strokeWidth="0.2" stroke="white" fill="" d={grat}></path>
       <circle
         cx={globeState.translateX}
         cy={globeState.translateY}
-        r={globeState.scale * globeState.zoom}
-        fill="darkblue"
+        r={globeState.scale * globeState.zoom * 1.03}
+        fill=""
         stroke="lightblue"
-        strokeWidth="20"
-        className="blur-md"
+        strokeWidth="5"
+        className="blur-md "
+        fillOpacity="0.05"
       />
 
       {/* --- 1) Render country paths first --- */}
       <g className="countries">
-        {countries.map((country, i) => {
+        {countries?.map((country, i) => {
           const { d, centroidLonLat } = country;
           return (
             <path
               key={i}
               d={d}
-              fill="darkgreen"
-              stroke="white"
-              strokeWidth="0.5"
+              fill="#1d447e"
+              stroke="black"
+              strokeWidth="1"
               className="transition-colors z-10"
               onClick={() => {
                 // example callback
@@ -184,11 +187,11 @@ const Globe = ({ handleCountryClick }) => {
               }}
               onMouseOver={(e) => {
                 // Set hovered country in state
-                e.target.style.fill = "green";
+                e.target.style.fill = "#275cad";
                 setHoveredCountry(country);
               }}
               onMouseOut={(e) => {
-                e.target.style.fill = "darkgreen";
+                e.target.style.fill = "";
 
                 setHoveredCountry(null);
               }}
@@ -202,8 +205,8 @@ const Globe = ({ handleCountryClick }) => {
          We'll show *all* visible labels at once (like your previous approach), 
          plus we'll show a *hover label* that can be styled differently if desired.
       */}
-      <g className="labels">
-        {countries.map((country, i) => {
+      <g className="labels ">
+        {countries?.map((country, i) => {
           const { centroidLonLat } = country;
           const [lon, lat] = centroidLonLat;
 
@@ -241,6 +244,7 @@ const Globe = ({ handleCountryClick }) => {
               fill="white"
               fontSize="14"
               textAnchor="middle"
+              className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
               style={{
                 pointerEvents: "none",
                 opacity: textOpacity,
@@ -280,7 +284,7 @@ const Globe = ({ handleCountryClick }) => {
               <text
                 x={x}
                 y={y}
-                fill="yellow"
+                fill="white"
                 fontSize="14"
                 fontWeight=""
                 textAnchor="middle"

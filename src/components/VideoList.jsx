@@ -1,19 +1,17 @@
 import PropTypes from "prop-types";
-import { LuEye } from "react-icons/lu";
-import { BiLike } from "react-icons/bi";
-import { FaCommentAlt } from "react-icons/fa";
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import { GrChannel } from "react-icons/gr";
-import { abbreviateNumber } from "../utils/abbreviateNumber";
 import { useEffect, useState } from "react";
-import { getFlag } from "../services/youtubeService";
+import { getFlag, getChannelInfo } from "../services/youtubeService";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
+import VideoInfoCard from "./VideoInfoCard";
 
 function VideoList({ videos, selectedCountry, loading, error }) {
   const [flag, setFlag] = useState("");
   const [flagLoading, setFlagLoading] = useState(false);
   const [flagError, setFlagError] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false); // For collapsing the entire list
+  const [channelInfo, setChannelInfo] = useState(null);
+  const [isOpenChannelInfo, setIsOpenChannelInfo] = useState(false); // For channel collapsible
 
   useEffect(() => {
     async function fetchFlag() {
@@ -21,10 +19,8 @@ function VideoList({ videos, selectedCountry, loading, error }) {
         setFlag("");
         return;
       }
-
       setFlagLoading(true);
       setFlagError(null);
-
       try {
         const flagData = await getFlag(selectedCountry);
         setFlag(flagData);
@@ -37,126 +33,124 @@ function VideoList({ videos, selectedCountry, loading, error }) {
         setFlagLoading(false);
       }
     }
-
     fetchFlag();
   }, [selectedCountry]);
 
+  async function handleFetchChannelInfo(channelId) {
+    try {
+      const response = await getChannelInfo(channelId);
+      setChannelInfo(response);
+      // Optionally open the channel collapsible when we fetch
+      setIsOpenChannelInfo(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <>
-      <div
-        className={`transition-all flex gap-y-1 flex-grow flex-col max-w-[600px] min-w-[350px]  ${
-          isOpen ? "h-[95vh]" : "h-16"
-        } border-gray-700 border rounded-xl m-5 backdrop-blur-md shadow-lg shadow-black overflow-y-hidden`}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-x-2 text-nowrap bg-gray-800 p-2 min-h-16 w-full ">
-          <div className="flex items-center justify-between w-full">
-            <h1 className="text-xl w-full">Videos populares</h1>
-            <button
-              onClick={() => setIsOpen((prev) => !prev)}
-              className=" text-2xl"
-            >
-              <MdOutlineKeyboardDoubleArrowUp
-                className={`${isOpen ? "" : "rotate-180"} transition-all`}
-              ></MdOutlineKeyboardDoubleArrowUp>
-            </button>
-          </div>
-          <div className="w-full text-nowrap h-12">
-            {loading && (
-              <h1 className=" text-white rounded-md p-1 bg-blue-700 text-center leading-4">
-                Cargando videos...
-              </h1>
-            )}
-            {error && (
-              <h1 className=" text-white rounded-md p-1 bg-red-700 text-center md:text-nowrap text-wrap leading-4 ">
-                {error}
-              </h1>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-x-2 px-2 mt-1">
-          Seleccionado: {selectedCountry || "..."}
+    <div
+      className={`transition-all flex gap-y-1 flex-grow flex-col max-w-[500px]  
+        ${isOpen ? "h-[95vh]" : "h-20"}  
+        border-gray-700 border rounded-xl m-5 backdrop-blur-sm shadow-lg shadow-black overflow-y-hidden`}
+    >
+      {/* Header area */}
+      <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44 w-full overflow-hidden">
+        {/* Flag loading, error, or the image */}
+        <div className="absolute w-full flex items-center justify-center">
           {flagLoading && <h1>Cargando bandera...</h1>}
-          {flagError && <h1>Error al cargar la bandera...</h1>}
-          {flag && <img src={flag} className="w-10 h-6 object-cover"></img>}
+          {flagError && (
+            <h1 className="text-right">Error al cargar la bandera...</h1>
+          )}
+          {flag && (
+            <img
+              src={flag}
+              className={`w-full object-cover transition-all ${
+                isOpen ? "h-44" : "h-20"
+              }`}
+            />
+          )}
+          <div className="absolute top-0 left-0 bg-gradient-to-r from-black/100 to-gray-50/0 w-[100%] h-[100%]" />
         </div>
-        <div className="p-2 overflow-y-scroll  ">
-          {!videos.length ? (
-            <p>No hay videos para mostrar.</p>
-          ) : (
-            <ul className="flex flex-col space-y-2 rounded-xl p-2   ">
-              {videos?.map((video) => (
-                <li
-                  key={video.id}
-                  className="video-item hover:bg-gray-800 grid group border-b bg-gray-800 border-r rounded-2xl p-2  hover:border-opacity-100 border-opacity-20 "
-                  href={`https://www.youtube.com/watch?v=${video.id}`}
-                >
-                  <a
-                    href={`https://www.youtube.com/watch?v=${video.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <div className="flex gap-2 items-center">
-                      <img
-                        src={video.snippet.thumbnails.default.url}
-                        alt={video.snippet.title}
-                        className="video-thumbnail"
-                      />
-                      <h3 className="group-hover:underline">
-                        {video.snippet.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-x-1 text-md">
-                      <GrChannel className="text-xl mb-1"></GrChannel>
-                      <p className="">{video.snippet.channelTitle}</p>
-                    </div>
-                    <div className="flex  *:flex *:justify-start *:gap-x-2  *:items-center text-gray-400">
-                      <p className="w-[20%] flex">
-                        <LuEye></LuEye>
-                        <span>
-                          {abbreviateNumber(video.statistics.viewCount)}
-                        </span>
-                      </p>
-                      <p className="w-[20%] flex">
-                        <BiLike></BiLike>
-                        {abbreviateNumber(video.statistics.likeCount)}
-                      </p>
-                      <p className="w-[20%] flex">
-                        <FaCommentAlt></FaCommentAlt>
-                        {abbreviateNumber(video.statistics.commentCount)}
-                      </p>
-                      <p className="">
-                        <MdOutlineAccessTimeFilled></MdOutlineAccessTimeFilled>
-                        {new Date(
-                          video.snippet.publishedAt
-                        ).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+        {/* Title + expand button */}
+        <div className="flex items-center justify-between w-full z-10 h-20 p-2">
+          <h1
+            className={`${
+              isOpen ? "text-3xl" : "text-2xl"
+            } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
+          >
+            Videos populares
+          </h1>
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="text-3xl border-1 border-gray-200 shadow-sm bg-slate-900 shadow-black rounded-md"
+          >
+            <MdOutlineKeyboardDoubleArrowUp
+              className={`${
+                isOpen ? "" : "rotate-180"
+              } transition-all text-gray-200`}
+            />
+          </button>
+        </div>
+
+        {/* Loading or error states */}
+        <div className="w-full text-nowrap h-fit z-10 mx-2 flex justify-end">
+          {loading && (
+            <h1 className="text-white rounded-md p-1 bg-blue-700 text-center leading-4">
+              Cargando videos...
+            </h1>
+          )}
+          {error && (
+            <h1 className="text-white rounded-md p-1 bg-red-700 text-center leading-4">
+              {error}
+            </h1>
           )}
         </div>
       </div>
-    </>
+
+      {/* Video List Body */}
+      <div className="p-2 overflow-y-auto ">
+        {!videos.length ? (
+          <h1 className="text-center bg-gray-600 rounded-md opacity-80">
+            No hay videos para mostrar.
+          </h1>
+        ) : (
+          <ul className="flex flex-col space-y-2 p-2">
+            {selectedCountry && (
+              <span className="flex items-center gap-x-2">
+                Seleccionado: {selectedCountry}
+                {flag && (
+                  <img
+                    src={flag}
+                    className="w-14 h-8 object-cover rounded-md"
+                    alt="Flag"
+                  />
+                )}
+              </span>
+            )}
+
+            {videos.map((video, i) => (
+              <VideoInfoCard
+                key={video.id || i}
+                videoInfo={video}
+                channelInfo={channelInfo}
+                handleFetchChannelInfo={handleFetchChannelInfo}
+                isOpenChannelInfo={isOpenChannelInfo}
+                setIsOpenChannelInfo={setIsOpenChannelInfo}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 }
 
 VideoList.propTypes = {
-  videos: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      snippet: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        channelTitle: PropTypes.string.isRequired,
-        thumbnails: PropTypes.shape({
-          default: PropTypes.shape({
-            url: PropTypes.string.isRequired,
-          }).isRequired,
-        }).isRequired,
-      }).isRequired,
-    })
-  ).isRequired,
+  videos: PropTypes.array.isRequired,
+  selectedCountry: PropTypes.string,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
 };
 
 export default VideoList;
