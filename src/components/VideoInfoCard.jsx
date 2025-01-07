@@ -67,7 +67,7 @@ export default function VideoInfoCard({
           {/* Title & Channel link */}
           <div className="flex flex-col justify-between flex-grow transition-all w-full ">
             {isSameChannel ? (
-              <h3 className=" leading-6 h-full overflow-hidden line-clamp-2">
+              <h3 className=" leading-6 line-clamp-2">
                 {channelSnippet?.description}
               </h3>
             ) : (
