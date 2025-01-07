@@ -39,33 +39,33 @@ export default function VideoInfoCard({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         key={videoInfo.id}
-        className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden"
+        className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l from-slate-500/20 to-slate-900/80"
       >
         {/* --- Top Row: Thumbnail + Title/Channel --- */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 ">
           {/* Thumbnail or channel image */}
           <div
-            className={`flex items-center w-24 h-20 rounded-full  ${
-              isSameChannel ? "overflow-hidden" : ""
+            className={`flex items-center  w-[45%] max-h-fit justify-center rounded-full  ${
+              isSameChannel ? "" : ""
             }  transition-all `}
           >
             {isSameChannel ? (
               <img
-                className="object-cover transition-all"
+                className="object-cover transition-all rounded-full h-20 "
                 src={channelSnippet?.thumbnails?.default?.url}
                 alt={channelSnippet?.title || "Channel thumbnail"}
               />
             ) : (
               <img
-                className="object-cover transition-all"
-                src={snippet.thumbnails?.default?.url}
-                alt={snippet.title}
+                className="object-cover transition-all h-20 w-full"
+                src={snippet?.thumbnails?.default?.url}
+                alt={snippet?.title || "Video thumbnail"}
               />
             )}
           </div>
 
           {/* Title & Channel link */}
-          <div className="flex flex-col justify-between max-h-20 transition-all w-full ">
+          <div className="flex flex-col justify-between flex-grow transition-all w-full ">
             {isSameChannel ? (
               <h3 className=" leading-6 h-full overflow-hidden line-clamp-2">
                 {channelSnippet?.description}
@@ -98,9 +98,9 @@ export default function VideoInfoCard({
                   className="flex items-center gap-x-1 text-md hover:underline"
                   onClick={() => handleFetchChannelInfo(snippet.channelId)}
                 >
+                  <IoMdMore />
                   <GrChannel className="text-xl mb-1" />
                   <p className="font-semibold">{snippet.channelTitle}</p>
-                  <IoMdMore />
                 </button>
               )}
 
@@ -129,42 +129,58 @@ export default function VideoInfoCard({
         {/* --- Stats Row --- */}
         {isSameChannel ? (
           // Channel-level stats
-          <div className="flex  items-center justify-between text-gray-400 w-full *:w-full  *:pl-2 ">
+          <div className="flex  items-center *:justify-center text-gray-400  *:w-full  mt-1 ">
             <p className="flex items-center gap-x-1 ">
               <LuEye />
-              <span>{abbreviateNumber(channelStats?.viewCount)}</span>
+              <span title="Total de visualizaciones del canal">
+                {abbreviateNumber(channelStats?.viewCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1 ">
               <SlPeople />
-              {abbreviateNumber(channelStats?.subscriberCount)}
+              <span title="Suscriptores">
+                {abbreviateNumber(channelStats?.subscriberCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1 ">
               <LiaFileVideoSolid />
-              {abbreviateNumber(channelStats?.videoCount)}
+              <span title="Cantidad de videos">
+                {abbreviateNumber(channelStats?.videoCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1 ">
               <CiCalendarDate />
-              {new Date(channelSnippet?.publishedAt).toLocaleDateString()}
+              <span title="Fecha de lanzamiento del canal">
+                {new Date(channelSnippet?.publishedAt).toLocaleDateString()}
+              </span>
             </p>
           </div>
         ) : (
           // Video-level stats
-          <div className="flex  items-center justify-between text-gray-400 *:w-full  *:pl-2 ">
+          <div className="flex  items-center *:justify-center text-gray-400  *:w-full  mt-1 ">
             <p className="flex items-center gap-x-1">
               <LuEye />
-              {abbreviateNumber(statistics?.viewCount)}
+              <span title="Total de visualizaciones del video">
+                {abbreviateNumber(statistics?.viewCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1">
               <BiLike />
-              {abbreviateNumber(statistics?.likeCount)}
+              <span title="Cantidad de me gusta">
+                {abbreviateNumber(statistics?.likeCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1">
               <FaRegCommentAlt />
-              {abbreviateNumber(statistics?.commentCount)}
+              <span title="Cantidad de comentarios">
+                {abbreviateNumber(statistics?.commentCount)}
+              </span>
             </p>
             <p className="flex items-center gap-x-1">
               <FaRegClock />
-              {new Date(snippet?.publishedAt).toLocaleDateString()}
+              <span title="Fecha de lanzamiento del video">
+                {new Date(snippet?.publishedAt).toLocaleDateString()}
+              </span>
             </p>
           </div>
         )}

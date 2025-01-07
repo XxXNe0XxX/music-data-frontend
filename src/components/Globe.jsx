@@ -1,6 +1,8 @@
 import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
+import { LuTurtle } from "react-icons/lu";
+import { LuRabbit } from "react-icons/lu";
 
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
@@ -34,6 +36,7 @@ const Globe = ({ handleCountryClick }) => {
   const [countries, setCountries] = useState([]);
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [grat, setGrat] = useState("");
+  // 1) Add rotationSpeed & autoRotate
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
     scale: 400,
@@ -45,6 +48,8 @@ const Globe = ({ handleCountryClick }) => {
     rotatePhi: 0,
     rotateGamma: 0,
     zoom: 1,
+    rotationSpeed: 0.07,
+    autoRotate: true,
   });
 
   const svgRef = useRef();
@@ -52,7 +57,8 @@ const Globe = ({ handleCountryClick }) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  // Resize effect
+
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       dimensions.current = {
@@ -77,6 +83,22 @@ const Globe = ({ handleCountryClick }) => {
     });
   }, []);
 
+  // 2) Auto-rotate effect
+  useEffect(() => {
+    let rotationTimer;
+    if (globeState.autoRotate) {
+      rotationTimer = d3.timer(() => {
+        setGlobeState((prev) => ({
+          ...prev,
+          rotateLambda: prev.rotateLambda + prev.rotationSpeed,
+        }));
+      });
+    }
+    return () => {
+      if (rotationTimer) rotationTimer.stop();
+    };
+  }, [globeState.autoRotate, globeState.rotationSpeed]);
+
   // Recompute paths + attach interactions
   useEffect(() => {
     if (!geoJson || !svgRef.current) return;
@@ -95,7 +117,7 @@ const Globe = ({ handleCountryClick }) => {
     const graticule = d3.geoGraticule10();
     setGrat(geoGenerator(graticule));
 
-    const countriesData = geoJson?.features.map((feature) => ({
+    const countriesData = geoJson.features.map((feature) => ({
       ...feature,
       d: geoGenerator(feature),
       centroidLonLat: d3.geoCentroid(feature),
@@ -109,6 +131,8 @@ const Globe = ({ handleCountryClick }) => {
       d3.drag().on("drag", (event) => {
         setGlobeState((prev) => ({
           ...prev,
+          // If the user drags, it overrides auto rotation
+          autoRotate: false,
           rotateLambda: prev.rotateLambda + event.dx * 0.2,
           rotatePhi: Math.max(
             -90,
@@ -143,129 +167,122 @@ const Globe = ({ handleCountryClick }) => {
     globeState.rotatePhi,
     globeState.translateX,
     globeState.translateY,
+    // If you want to re-project on auto rotation changes, add it too:
+    // globeState.autoRotate,
   ]);
 
+  // Optional button for toggling rotation
+  const toggleRotation = () => {
+    setGlobeState((prev) => ({
+      ...prev,
+      autoRotate: !prev.autoRotate,
+    }));
+  };
+
   return (
-    <svg
-      ref={svgRef}
-      width={dimensions.current.width}
-      height={dimensions.current.height}
-      className="absolute z-10 "
-    >
-      {/* Globe boundary circle */}
-      <path strokeWidth="0.2" stroke="white" fill="" d={grat}></path>
-      <circle
-        cx={globeState.translateX}
-        cy={globeState.translateY}
-        r={globeState.scale * globeState.zoom * 1.03}
-        fill=""
-        stroke="lightblue"
-        strokeWidth="5"
-        className="blur-md "
-        fillOpacity="0.05"
-      />
+    <>
+      {/* A toggle button to start/stop rotation (optional) */}
+      <div
+        className="absolute z-20 flex items-center gap-6 max-w-screen w-screen pl-2"
+        style={{ top: "95vh" }}
+      >
+        <button
+          onClick={toggleRotation}
+          className=" rounded-md opacity-70 hover:opacity-100 transition-opacity  "
+        >
+          {globeState.autoRotate ? "Stop Rotation" : "Start Rotation"}
+        </button>
+        <button
+          className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl  "
+          onClick={() => {
+            setGlobeState((prev) => ({
+              ...prev,
+              rotationSpeed: 0.03,
+            }));
+            !globeState.autoRotate && toggleRotation();
+          }}
+        >
+          <LuTurtle />
+        </button>
+        <button
+          className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl  "
+          onClick={() => {
+            setGlobeState((prev) => ({
+              ...prev,
+              rotationSpeed: 0.5,
+            }));
+            !globeState.autoRotate && toggleRotation();
+          }}
+        >
+          <LuRabbit />
+        </button>
+      </div>
 
-      {/* --- 1) Render country paths first --- */}
-      <g className="countries">
-        {countries?.map((country, i) => {
-          const { d, centroidLonLat } = country;
-          return (
-            <path
-              key={i}
-              d={d}
-              fill="#1d447e"
-              stroke="black"
-              strokeWidth="1"
-              className="transition-colors z-10"
-              onClick={() => {
-                // example callback
-                handleCountryClick(
-                  convertIsoA3ToIsoA2(country.properties.iso_a3),
-                  country.properties.name
-                );
-                console.log(`Clicked on: ${country.properties.name}`);
-              }}
-              onMouseOver={(e) => {
-                // Set hovered country in state
-                e.target.style.fill = "#275cad";
-                setHoveredCountry(country);
-              }}
-              onMouseOut={(e) => {
-                e.target.style.fill = "";
+      <svg
+        ref={svgRef}
+        width={dimensions.current.width}
+        height={dimensions.current.height}
+        className="absolute z-10"
+      >
+        {/* Graticule path */}
+        <path strokeWidth="0.2" stroke="white" fill="" d={grat}></path>
 
-                setHoveredCountry(null);
-              }}
-            />
-          );
-        })}
-      </g>
+        {/* Glow-ish boundary circle */}
+        <circle
+          cx={globeState.translateX}
+          cy={globeState.translateY}
+          r={globeState.scale * globeState.zoom * 1.03}
+          fill=""
+          stroke="lightblue"
+          strokeWidth="5"
+          className="blur-md "
+          fillOpacity="0.05"
+        />
 
-      {/* 
-         --- 2) Show text labels afterwards --- 
-         We'll show *all* visible labels at once (like your previous approach), 
-         plus we'll show a *hover label* that can be styled differently if desired.
-      */}
-      <g className="labels ">
-        {countries?.map((country, i) => {
-          const { centroidLonLat } = country;
-          const [lon, lat] = centroidLonLat;
+        {/* Countries */}
+        <g className="countries">
+          {countries.map((country, i) => {
+            const { d } = country;
+            return (
+              <path
+                key={i}
+                d={d}
+                fill="#1d447e"
+                stroke="black"
+                strokeWidth="1"
+                className="transition-colors z-10"
+                onClick={() => {
+                  handleCountryClick(
+                    convertIsoA3ToIsoA2(country.properties.iso_a3),
+                    country.properties.name
+                  );
+                  console.log(`Clicked on: ${country.properties.name}`);
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.fill = "#275cad";
+                  setHoveredCountry(country);
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.fill = "#1d447e";
+                  setHoveredCountry(null);
+                }}
+              />
+            );
+          })}
+        </g>
 
-          // check if on visible hemisphere
-          const visible = isVisible(lon, lat, [
-            globeState.rotateLambda,
-            globeState.rotatePhi,
-            globeState.rotateGamma,
-          ]);
-          if (!visible) return null;
-
-          // project to screen coords
-          const projection = d3["geo" + globeState.type]()
-            .scale(globeState.scale * globeState.zoom)
-            .translate([globeState.translateX, globeState.translateY])
-            .center([globeState.centerLon, globeState.centerLat])
-            .rotate([
+        {/* Label all visible countries if zoom >= 2 */}
+        <g className="labels">
+          {countries.map((country, i) => {
+            const { centroidLonLat } = country;
+            const [lon, lat] = centroidLonLat;
+            const visible = isVisible(lon, lat, [
               globeState.rotateLambda,
               globeState.rotatePhi,
               globeState.rotateGamma,
             ]);
+            if (!visible) return null;
 
-          const point = projection(centroidLonLat);
-          if (!point) return null;
-          const [x, y] = point;
-
-          // We'll fade out the "normal" label if user is not zoomed in enough
-          const textOpacity = globeState.zoom < 2 ? 0 : 1;
-
-          return (
-            <text
-              key={i}
-              x={x}
-              y={y}
-              fill="white"
-              fontSize="14"
-              textAnchor="middle"
-              className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
-              style={{
-                pointerEvents: "none",
-                opacity: textOpacity,
-                transition: "opacity 0.3s ease",
-              }}
-            >
-              {country.properties.name}
-            </text>
-          );
-        })}
-      </g>
-
-      {/* 
-          --- 3) Show a single "hover tooltip" label
-          We'll display the hovered country name in a 
-          different style, or near the centroid as well.
-      */}
-      {hoveredCountry && (
-        <g className="hover-label">
-          {(() => {
-            const { centroidLonLat } = hoveredCountry;
             const projection = d3["geo" + globeState.type]()
               .scale(globeState.scale * globeState.zoom)
               .translate([globeState.translateX, globeState.translateY])
@@ -275,30 +292,70 @@ const Globe = ({ handleCountryClick }) => {
                 globeState.rotatePhi,
                 globeState.rotateGamma,
               ]);
+
             const point = projection(centroidLonLat);
             if (!point) return null;
             const [x, y] = point;
 
-            // You can style this differently than the normal labels
+            // fade out if zoom < 2
+            const textOpacity = globeState.zoom < 2 ? 0 : 1;
+
             return (
               <text
+                key={i}
                 x={x}
                 y={y}
                 fill="white"
                 fontSize="14"
-                fontWeight=""
                 textAnchor="middle"
+                className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
                 style={{
                   pointerEvents: "none",
+                  opacity: textOpacity,
+                  transition: "opacity 0.3s ease",
                 }}
               >
-                {hoveredCountry.properties.name}
+                {country.properties.name}
               </text>
             );
-          })()}
+          })}
         </g>
-      )}
-    </svg>
+
+        {/* Hover label */}
+        {hoveredCountry && (
+          <g className="hover-label">
+            {(() => {
+              const { centroidLonLat } = hoveredCountry;
+              const projection = d3["geo" + globeState.type]()
+                .scale(globeState.scale * globeState.zoom)
+                .translate([globeState.translateX, globeState.translateY])
+                .center([globeState.centerLon, globeState.centerLat])
+                .rotate([
+                  globeState.rotateLambda,
+                  globeState.rotatePhi,
+                  globeState.rotateGamma,
+                ]);
+              const point = projection(centroidLonLat);
+              if (!point) return null;
+              const [x, y] = point;
+
+              return (
+                <text
+                  x={x}
+                  y={y}
+                  fill="white"
+                  fontSize="14"
+                  textAnchor="middle"
+                  style={{ pointerEvents: "none" }}
+                >
+                  {hoveredCountry.properties.name}
+                </text>
+              );
+            })()}
+          </g>
+        )}
+      </svg>
+    </>
   );
 };
 

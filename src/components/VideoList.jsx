@@ -41,7 +41,6 @@ function VideoList({ videos, selectedCountry, loading, error }) {
       const response = await getChannelInfo(channelId);
       setChannelInfo(response);
       // Optionally open the channel collapsible when we fetch
-      setIsOpenChannelInfo(true);
     } catch (error) {
       console.log(error);
     }
@@ -49,12 +48,12 @@ function VideoList({ videos, selectedCountry, loading, error }) {
 
   return (
     <div
-      className={`transition-all flex gap-y-1 flex-grow flex-col max-w-[500px]  
-        ${isOpen ? "h-[95vh]" : "h-20"}  
-        border-gray-700 border rounded-xl m-5 backdrop-blur-sm shadow-lg shadow-black overflow-y-hidden`}
+      className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen bg-black/50
+        ${isOpen ? "h-[94vh]" : "h-20 "}  
+        border-gray-700 border sm:rounded-xl m-0 md:m-4  shadow-lg shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
-      <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44 w-full overflow-hidden">
+      <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44  overflow-hidden">
         {/* Flag loading, error, or the image */}
         <div className="absolute w-full flex items-center justify-center">
           {flagLoading && <h1>Cargando bandera...</h1>}
@@ -109,13 +108,13 @@ function VideoList({ videos, selectedCountry, loading, error }) {
       </div>
 
       {/* Video List Body */}
-      <div className="p-2 overflow-y-auto ">
+      <div className=" overflow-y-auto ">
         {!videos.length ? (
           <h1 className="text-center bg-gray-600 rounded-md opacity-80">
             No hay videos para mostrar.
           </h1>
         ) : (
-          <ul className="flex flex-col space-y-2 p-2">
+          <ul className="flex flex-col space-y-5 p-2">
             {selectedCountry && (
               <span className="flex items-center gap-x-2">
                 Seleccionado: {selectedCountry}

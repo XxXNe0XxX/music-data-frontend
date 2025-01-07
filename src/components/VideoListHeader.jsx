@@ -26,10 +26,10 @@ function VideoListHeader({
           <motion.div.div
             /* 2) Use a unique `key` so that changing `flag` unmounts/remounts this div */
             key={flag}
-            className="absolute w-full flex items-center justify-center"
+            className="absolute w-full flex content-center"
             /* 3) Define initial, animate, exit states for the fade animation */
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }} // Adjust as needed
           >
