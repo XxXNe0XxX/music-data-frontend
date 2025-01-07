@@ -49,8 +49,8 @@ function VideoList({ videos, selectedCountry, loading, error }) {
   return (
     <div
       className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen bg-black/50
-        ${isOpen ? "h-[94vh]" : "h-20 "}  
-        border-gray-700 border sm:rounded-xl m-0 md:m-4  shadow-lg shadow-black overflow-y-hidden`}
+        ${isOpen ? "h-[94vh]" : " h-12 md:h-20 "}  
+        border-gray-900 border-l border-r border-b sm:rounded-md m-0 md:mt-4 md:ml-4  shadow-lg shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
       <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44  overflow-hidden">
@@ -64,7 +64,7 @@ function VideoList({ videos, selectedCountry, loading, error }) {
             <img
               src={flag}
               className={`w-full object-cover transition-all ${
-                isOpen ? "h-44" : "h-20"
+                isOpen ? "h-44" : "h-12 md:h-20"
               }`}
             />
           )}
@@ -72,7 +72,7 @@ function VideoList({ videos, selectedCountry, loading, error }) {
         </div>
 
         {/* Title + expand button */}
-        <div className="flex items-center justify-between w-full z-10 h-20 p-2">
+        <div className="flex items-center justify-between w-full z-10 h-12 md:h-20 p-2">
           <h1
             className={`${
               isOpen ? "text-3xl" : "text-2xl"
@@ -100,8 +100,10 @@ function VideoList({ videos, selectedCountry, loading, error }) {
             </h1>
           )}
           {error && (
-            <h1 className="text-white rounded-md p-1 bg-red-700 text-center leading-4">
-              {error}
+            <h1 className="text-white rounded-md p-1 bg-red-700 text-center leading-4 text-wrap">
+              {/* {error} */}
+              Videos no disponibles debido a restricciones regionales de
+              youtube.
             </h1>
           )}
         </div>

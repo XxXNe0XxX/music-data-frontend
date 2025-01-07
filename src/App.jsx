@@ -27,12 +27,12 @@ function App() {
   };
 
   return (
-    <div className="relative bg-black ">
+    <div className="relative bg-black text-sm md:text-base ">
       <Globe handleCountryClick={handleCountryClick}></Globe>
       <Starfield
-        starCount={300}
+        starCount={100}
         starColor={[255, 255, 255]}
-        speedFactor={0.05}
+        speedFactor={0.009}
         backgroundColor="black"
         className="-z-50 absolute"
       />

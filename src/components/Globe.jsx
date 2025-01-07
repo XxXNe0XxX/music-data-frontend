@@ -47,7 +47,7 @@ const Globe = ({ handleCountryClick }) => {
     rotateLambda: 0,
     rotatePhi: 0,
     rotateGamma: 0,
-    zoom: 1,
+    zoom: 0.6,
     rotationSpeed: 0.07,
     autoRotate: true,
   });
@@ -145,7 +145,7 @@ const Globe = ({ handleCountryClick }) => {
     // Zoom to scale
     const zoom = d3
       .zoom()
-      .scaleExtent([1, 12])
+      .scaleExtent([0.5, 10])
       .on("zoom", (event) => {
         setGlobeState((prev) => ({
           ...prev,
@@ -182,10 +182,7 @@ const Globe = ({ handleCountryClick }) => {
   return (
     <>
       {/* A toggle button to start/stop rotation (optional) */}
-      <div
-        className="absolute z-20 flex items-center gap-6 max-w-screen w-screen pl-2"
-        style={{ top: "95vh" }}
-      >
+      <div className="absolute z-20 flex items-center gap-6 max-w-screen w-screen pl-2 top-[96vh]">
         <button
           onClick={toggleRotation}
           className=" rounded-md opacity-70 hover:opacity-100 transition-opacity  "
