@@ -182,7 +182,7 @@ const Globe = ({ handleCountryClick }) => {
   return (
     <>
       {/* A toggle button to start/stop rotation (optional) */}
-      <div className="absolute z-20 flex items-center gap-6 max-w-screen w-screen pl-2 top-[96vh]">
+      <div className="absolute z-20 flex items-center space-x-3 max-w-screen w-screen pl-2 top-[95vh]">
         <button
           onClick={toggleRotation}
           className=" rounded-md opacity-70 hover:opacity-100 transition-opacity  "

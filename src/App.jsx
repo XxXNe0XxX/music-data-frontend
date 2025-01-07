@@ -27,7 +27,7 @@ function App() {
   };
 
   return (
-    <div className="relative bg-black text-sm md:text-base ">
+    <div className="relative bg-black text-sm md:text-base h-screen w-screen overflow-hidden">
       <Globe handleCountryClick={handleCountryClick}></Globe>
       <Starfield
         starCount={100}

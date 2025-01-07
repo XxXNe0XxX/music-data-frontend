@@ -53,12 +53,18 @@ function VideoList({ videos, selectedCountry, loading, error }) {
         border-gray-900 border-l border-r border-b sm:rounded-md m-0 md:mt-4 md:ml-4  shadow-lg shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
-      <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44  overflow-hidden">
+      <div className="relative flex flex-wrap items-start justify-between text-nowrap min-h-44 overflow-hidden">
         {/* Flag loading, error, or the image */}
         <div className="absolute w-full flex items-center justify-center">
-          {flagLoading && <h1>Cargando bandera...</h1>}
+          {flagLoading && (
+            <h1 className="absolute bottom-0 left-0 p-1">
+              Cargando bandera...
+            </h1>
+          )}
           {flagError && (
-            <h1 className="text-right">Error al cargar la bandera...</h1>
+            <h1 className="text-right absolute bottom-0 left-0 p-1">
+              Error al cargar la bandera...
+            </h1>
           )}
           {flag && (
             <img
@@ -78,7 +84,7 @@ function VideoList({ videos, selectedCountry, loading, error }) {
               isOpen ? "text-3xl" : "text-2xl"
             } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
           >
-            Videos populares
+            Videos populares 🔥
           </h1>
           <button
             onClick={() => setIsOpen((prev) => !prev)}
