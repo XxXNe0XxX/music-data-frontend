@@ -95,12 +95,14 @@ export default function VideoInfoCard({
                 </a>
               ) : (
                 <button
-                  className="flex items-center gap-x-1 text-md hover:underline"
+                  className="flex items-center gap-x-1 text-md hover:underline "
                   onClick={() => handleFetchChannelInfo(snippet.channelId)}
                 >
                   <IoMdMore />
                   <GrChannel className="text-xl mb-1" />
-                  <p className="font-semibold">{snippet.channelTitle}</p>
+                  <p className="font-semibold line-clamp-1 text-start">
+                    {snippet.channelTitle}
+                  </p>
                 </button>
               )}
 
@@ -125,7 +127,22 @@ export default function VideoInfoCard({
             </div>
           </div>
         </div>
-
+        {!isSameChannel && (
+          <div className="flex flex-wrap line-clamp-2  font-thin text-blue-200 w-full p-1  items-center justify-start">
+            {snippet?.tags?.map((tag, i) => {
+              if (i < 5) {
+                return (
+                  <span
+                    className="hover:text-blue-400 transition-colors cursor-default ml-2 uppercase"
+                    key={i}
+                  >
+                    #{tag}
+                  </span>
+                );
+              }
+            })}
+          </div>
+        )}
         {/* --- Stats Row --- */}
         {isSameChannel ? (
           // Channel-level stats

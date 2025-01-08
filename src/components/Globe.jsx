@@ -88,14 +88,14 @@ const Globe = ({ handleCountryClick }) => {
     let rotationTimer;
     if (globeState.autoRotate) {
       rotationTimer = d3.timer(() => {
-        setGlobeState((prev) => ({
+        return setGlobeState((prev) => ({
           ...prev,
           rotateLambda: prev.rotateLambda + prev.rotationSpeed,
         }));
       });
     }
     return () => {
-      if (rotationTimer) rotationTimer.stop();
+      if (rotationTimer) return rotationTimer.stop();
     };
   }, [globeState.autoRotate, globeState.rotationSpeed]);
 
@@ -173,7 +173,7 @@ const Globe = ({ handleCountryClick }) => {
 
   // Optional button for toggling rotation
   const toggleRotation = () => {
-    setGlobeState((prev) => ({
+    return setGlobeState((prev) => ({
       ...prev,
       autoRotate: !prev.autoRotate,
     }));
@@ -196,7 +196,7 @@ const Globe = ({ handleCountryClick }) => {
               ...prev,
               rotationSpeed: 0.03,
             }));
-            !globeState.autoRotate && toggleRotation();
+            return !globeState.autoRotate && toggleRotation();
           }}
         >
           <LuTurtle />
@@ -208,7 +208,7 @@ const Globe = ({ handleCountryClick }) => {
               ...prev,
               rotationSpeed: 0.5,
             }));
-            !globeState.autoRotate && toggleRotation();
+            return !globeState.autoRotate && toggleRotation();
           }}
         >
           <LuRabbit />
@@ -253,15 +253,15 @@ const Globe = ({ handleCountryClick }) => {
                     convertIsoA3ToIsoA2(country.properties.iso_a3),
                     country.properties.name
                   );
-                  console.log(`Clicked on: ${country.properties.name}`);
+                  return console.log(`Clicked on: ${country.properties.name}`);
                 }}
                 onMouseOver={(e) => {
                   e.target.style.fill = "#275cad";
-                  setHoveredCountry(country);
+                  return setHoveredCountry(country);
                 }}
                 onMouseOut={(e) => {
                   e.target.style.fill = "#1d447e";
-                  setHoveredCountry(null);
+                  return setHoveredCountry(null);
                 }}
               />
             );
