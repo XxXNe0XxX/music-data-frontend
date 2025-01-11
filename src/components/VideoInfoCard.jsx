@@ -38,7 +38,6 @@ export default function VideoInfoCard({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        key={videoInfo.id}
         className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l from-slate-500/20 to-slate-900/80"
       >
         {/* --- Top Row: Thumbnail + Title/Channel --- */}
@@ -127,10 +126,11 @@ export default function VideoInfoCard({
             </div>
           </div>
         </div>
+        {/* Tags list */}
         {!isSameChannel && (
           <div className="flex flex-wrap line-clamp-2  font-thin text-blue-200 w-full p-1  items-center justify-start">
             {snippet?.tags?.map((tag, i) => {
-              if (i < 5) {
+              if (i < 5 && tag.length < 20) {
                 return (
                   <span
                     className="hover:text-blue-400 transition-colors cursor-default ml-2 uppercase"

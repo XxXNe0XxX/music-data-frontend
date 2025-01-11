@@ -1,8 +1,11 @@
 import * as d3 from "d3";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 import { LuTurtle } from "react-icons/lu";
 import { LuRabbit } from "react-icons/lu";
+import { FaSpotify } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
+import PlatformContext from "../context/PlatformProvider";
 
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
@@ -31,11 +34,12 @@ function isVisible(lon, lat, [lambdaRotate, phiRotate, gamma]) {
   return dist < 90;
 }
 
-const Globe = ({ handleCountryClick }) => {
+const Globe = ({ setSelectedCountry }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [countries, setCountries] = useState([]);
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [grat, setGrat] = useState("");
+  const { currentPlatform } = useContext(PlatformContext);
   // 1) Add rotationSpeed & autoRotate
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
@@ -84,20 +88,20 @@ const Globe = ({ handleCountryClick }) => {
   }, []);
 
   // 2) Auto-rotate effect
-  useEffect(() => {
-    let rotationTimer;
-    if (globeState.autoRotate) {
-      rotationTimer = d3.timer(() => {
-        return setGlobeState((prev) => ({
-          ...prev,
-          rotateLambda: prev.rotateLambda + prev.rotationSpeed,
-        }));
-      });
-    }
-    return () => {
-      if (rotationTimer) return rotationTimer.stop();
-    };
-  }, [globeState.autoRotate, globeState.rotationSpeed]);
+  // useEffect(() => {
+  //   if (!globeState.autoRotate) return;
+
+  //   const rotationTimer = d3.timer((elapsed) => {
+  //     // ...
+  //     setGlobeState((prev) => ({
+  //       ...prev,
+  //       rotateLambda: prev.rotateLambda + prev.rotationSpeed,
+  //     }));
+  //   });
+
+  //   return () => rotationTimer.stop();
+  //   // ONLY re-run if autoRotate toggles from false->true
+  // }, [globeState.autoRotate]);
 
   // Recompute paths + attach interactions
   useEffect(() => {
@@ -223,18 +227,38 @@ const Globe = ({ handleCountryClick }) => {
       >
         {/* Graticule path */}
         <path strokeWidth="0.2" stroke="white" fill="" d={grat}></path>
-
-        {/* Glow-ish boundary circle */}
+        {currentPlatform === "youtube" ? (
+          <FaYoutube
+            onClick={() => console.log(this)}
+            size={globeState.zoom * 200}
+            // size={(globeState.scale * globeState.zoom) / 4}
+            x={globeState.translateX - 100 * globeState.zoom}
+            y={globeState.translateY - 100 * globeState.zoom}
+            className="text-red-700 opacity-40"
+          ></FaYoutube>
+        ) : currentPlatform === "spotify" ? (
+          <FaSpotify
+            onClick={() => console.log(this)}
+            size={globeState.zoom * 200}
+            // size={(globeState.scale * globeState.zoom) / 4}
+            x={globeState.translateX - 100 * globeState.zoom}
+            y={globeState.translateY - 100 * globeState.zoom}
+            className="text-green-700 opacity-40"
+          ></FaSpotify>
+        ) : (
+          ""
+        )}
         <circle
           cx={globeState.translateX}
           cy={globeState.translateY}
           r={globeState.scale * globeState.zoom * 1.03}
-          fill=""
+          fill="white"
           stroke="lightblue"
           strokeWidth="5"
           className="blur-md "
           fillOpacity="0.05"
         />
+        {/* Glow-ish boundary circle */}
 
         {/* Countries */}
         <g className="countries">
@@ -249,9 +273,8 @@ const Globe = ({ handleCountryClick }) => {
                 strokeWidth="1"
                 className="transition-colors z-10"
                 onClick={() => {
-                  handleCountryClick(
-                    convertIsoA3ToIsoA2(country.properties.iso_a3),
-                    country.properties.name
+                  setSelectedCountry(
+                    convertIsoA3ToIsoA2(country.properties.iso_a3)
                   );
                   return console.log(`Clicked on: ${country.properties.name}`);
                 }}
