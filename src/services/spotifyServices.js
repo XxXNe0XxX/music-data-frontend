@@ -1,7 +1,7 @@
 import axios from "../api/axios";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 const BASE_URL = "https://music-data-visualization-backend.onrender.com/api";
-// const BASE_URL = "http://localhost:3001";
+// const BASE_URL = "http://localhost:3001/api";
 /**
  * Obtiene las canciones más populares de una región específica.
  * @param {string} regionCode - Código de región (ej. "US", "MX").
