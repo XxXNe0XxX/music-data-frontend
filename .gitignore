@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# .gitignore
+# Frontend
+.env.development
+.env.production
+
+

@@ -1,35 +1,47 @@
-import axios from "../api/axios";
+// spotifyServices.js
+
+import axios from "../api/axios"; // Ensure this points to your configured Axios instance
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
-const BASE_URL = "https://music-data-visualization-backend.onrender.com/api";
-// const BASE_URL = "http://localhost:3001/api";
+
 /**
  * Obtiene las canciones más populares de una región específica.
  * @param {string} regionCode - Código de región (ej. "US", "MX").
- * @returns {Promise<Object>} - Lista de canciones populares.
+ * @returns {Promise<Array>} - Lista de canciones populares.
  * @throws {Error} - Si ocurre un error al obtener las canciones.
  */
-// export async function getPopularSongs(regionCode) {
-//   try {
-//     const response = await axios.get(`spotify/popular/${regionCode}`);
-
-//     // Axios automatically throws an error for status codes outside 2xx
-//     // However, if you have custom status codes to handle, you can include additional checks here
-//     // For example:
-//     // if (response.status === 204) {
-//     //   return { songs: [] }; // No Content
-//     // }
-
-//     return response.data;
-//   } catch (err) {
-//     console.error(`Error al obtener las canciones: ${err.message}`);
-//     throw err; // Re-throw the error to let the caller handle it
-//   }
-// }
-
 export async function getPopularSongs(regionCode) {
-  const response = await fetch(`${BASE_URL}}/spotify/popular/${regionCode}`);
-  if (!response.ok) {
-    throw new Error(`Error al obtener los videos: ${response.statusText}`);
+  try {
+    // Convert the region code if necessary
+    const convertedCode = convertIsoA3ToIsoA2(regionCode);
+
+    const response = await axios.get(`/spotify/popular/${convertedCode}`, {
+      // You can add additional Axios configurations here if needed
+    });
+
+    // Axios automatically parses JSON responses
+    return response.data; // Ensure this matches the expected data structure
+  } catch (error) {
+    // Enhanced error handling
+    if (error.response) {
+      // The request was made, and the server responded with a status code outside the 2xx range
+      console.error(
+        `Error al obtener las canciones: ${error.response.status} - ${error.response.statusText}`
+      );
+      throw new Error(
+        `Error al obtener las canciones: ${error.response.statusText}`
+      );
+    } else if (error.request) {
+      // The request was made, but no response was received
+      console.error(
+        "No se recibió respuesta del servidor al obtener las canciones."
+      );
+      throw new Error(
+        "No se recibió respuesta del servidor al obtener las canciones."
+      );
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error(`Error al configurar la solicitud: ${error.message}`);
+      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+    }
   }
-  return response.json();
 }
