@@ -1,6 +1,7 @@
 import axios from "../api/axios";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
-
+const BASE_URL = "https://music-data-visualization-backend.onrender.com/api";
+// const BASE_URL = "http://localhost:3001";
 /**
  * Obtiene las canciones más populares de una región específica.
  * @param {string} regionCode - Código de región (ej. "US", "MX").
@@ -26,9 +27,7 @@ import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 // }
 
 export async function getPopularSongs(regionCode) {
-  const response = await fetch(
-    `http://localhost:3001/api/spotify/popular/${regionCode}`
-  );
+  const response = await fetch(`${BASE_URL}}/spotify/popular/${regionCode}`);
   if (!response.ok) {
     throw new Error(`Error al obtener los videos: ${response.statusText}`);
   }
