@@ -48,7 +48,7 @@ export async function getPopularVideos(regionCode) {
 export async function getChannelInfo(channelId) {
   try {
     const response = await axios.get(`youtube/popular/channel/${channelId}`);
-    return response.data; // Axios automáticamente parsea el JSON
+    return response.data.data; // Axios automáticamente parsea el JSON
   } catch (error) {
     if (error.response) {
       console.error(
