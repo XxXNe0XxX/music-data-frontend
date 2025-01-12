@@ -60,9 +60,9 @@ function ContentListHeader({
           } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-wrap`}
         >
           {currentPlatform === "youtube"
-            ? "Videos populares"
+            ? "Videos"
             : currentPlatform === "spotify"
-            ? "Canciones populares"
+            ? "Canciones"
             : ""}{" "}
           🔥
         </h1>
