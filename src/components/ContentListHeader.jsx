@@ -57,7 +57,7 @@ function ContentListHeader({
         <h1
           className={`${
             isOpen ? "text-3xl" : "text-2xl"
-          } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]`}
+          } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-wrap`}
         >
           {currentPlatform === "youtube"
             ? "Videos populares"
