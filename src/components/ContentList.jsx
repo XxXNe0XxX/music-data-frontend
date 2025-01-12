@@ -63,7 +63,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
     <div
       className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen bg-black/50
         ${isOpen ? "h-[94vh]" : " h-12 md:h-20 "}  
-        border-gray-900 border-l border-r border-b sm:rounded-md m-0 md:mt-4 md:ml-4  shadow-lg shadow-black overflow-y-hidden`}
+        border-gray-900 border-l border-r border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-lg shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
       <ContentListHeader

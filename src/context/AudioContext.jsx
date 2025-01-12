@@ -1,4 +1,10 @@
-import React, { useState, createContext, useContext, useRef } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useRef,
+  useEffect,
+} from "react";
 
 // Create a context to share audio state and actions
 const AudioContext = createContext();
@@ -9,6 +15,23 @@ const AudioProvider = ({ children }) => {
   const [currentAudioUrl, setCurrentAudioUrl] = useState(null); // Current audio URL
   const [isPlaying, setIsPlaying] = useState(false); // Play/Pause state
   const audioRef = useRef(new Audio()); // Audio element
+
+  // Add an event listener for the "ended" event when the component mounts
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    // When the audio ends, set isPlaying to false
+    const handleAudioEnd = () => {
+      setIsPlaying(false);
+    };
+
+    audio.addEventListener("ended", handleAudioEnd);
+
+    // Cleanup event listener on unmount
+    return () => {
+      audio.removeEventListener("ended", handleAudioEnd);
+    };
+  }, []);
 
   // Play or pause the current audio
   const togglePlayPause = () => {
