@@ -12,7 +12,7 @@ import axios from "../api/axios"; // Ensure this points to your configured Axios
 export async function getPopularVideos(regionCode) {
   try {
     const response = await axios.get(`youtube/popular/videos/${regionCode}`);
-    return response.data; // Axios automáticamente parsea el JSON
+    return response.data.data; // Axios automáticamente parsea el JSON
   } catch (error) {
     // Manejo de errores más detallado
     if (error.response) {

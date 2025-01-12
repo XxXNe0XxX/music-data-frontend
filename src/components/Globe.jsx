@@ -6,7 +6,8 @@ import { LuRabbit } from "react-icons/lu";
 import { FaSpotify } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import PlatformContext from "../context/PlatformProvider";
-
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-client";
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
@@ -44,8 +45,8 @@ const Globe = ({ setSelectedCountry }) => {
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
     scale: 400,
-    translateX: 0,
-    translateY: 0,
+    translateX: window.innerWidth / 2,
+    translateY: window.innerHeight / 2,
     centerLon: 0,
     centerLat: 0,
     rotateLambda: 0,
@@ -69,16 +70,33 @@ const Globe = ({ setSelectedCountry }) => {
         width: window.innerWidth,
         height: window.innerHeight,
       };
+
+      // Compute the diameter
+      const diameter = 2 * globeState.scale * 0.5;
+      const extraSpace = 500;
+      console.log(diameter + extraSpace, window.innerWidth);
+      // Decide how to position X
+      // If the globe + 500px is bigger than the screen width,
+      // horizontally center it. Otherwise, push it to about 3/4 of the screen.
+      let newTranslateX;
+      if (diameter + extraSpace < window.innerWidth) {
+        newTranslateX = window.innerWidth / 3; // center
+      } else {
+        newTranslateX = window.innerWidth / 2; // 3/4
+      }
+
+      // Only update translateX; leave translateY as is
       setGlobeState((prev) => ({
         ...prev,
-        translateX: window.innerWidth / 2,
-        translateY: window.innerHeight / 2,
+        translateX: newTranslateX,
       }));
     };
+
+    // Run once and again on resize
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [globeState.scale, globeState.zoom]);
 
   // Load GeoJSON once
   useEffect(() => {
@@ -88,20 +106,20 @@ const Globe = ({ setSelectedCountry }) => {
   }, []);
 
   // 2) Auto-rotate effect
-  // useEffect(() => {
-  //   if (!globeState.autoRotate) return;
+  useEffect(() => {
+    if (!globeState.autoRotate) return;
 
-  //   const rotationTimer = d3.timer((elapsed) => {
-  //     // ...
-  //     setGlobeState((prev) => ({
-  //       ...prev,
-  //       rotateLambda: prev.rotateLambda + prev.rotationSpeed,
-  //     }));
-  //   });
+    const rotationTimer = d3.timer((elapsed) => {
+      // ...
+      setGlobeState((prev) => ({
+        ...prev,
+        rotateLambda: prev.rotateLambda + prev.rotationSpeed,
+      }));
+    });
 
-  //   return () => rotationTimer.stop();
-  //   // ONLY re-run if autoRotate toggles from false->true
-  // }, [globeState.autoRotate]);
+    return () => rotationTimer.stop();
+    // ONLY re-run if autoRotate toggles from false->true
+  }, [globeState.autoRotate]);
 
   // Recompute paths + attach interactions
   useEffect(() => {
@@ -109,7 +127,7 @@ const Globe = ({ setSelectedCountry }) => {
 
     const projection = d3["geo" + globeState.type]()
       .scale(globeState.scale * globeState.zoom)
-      .translate([dimensions.current.width / 2, dimensions.current.height / 2])
+      .translate([globeState.translateX, globeState.translateY])
       .center([globeState.centerLon, globeState.centerLat])
       .rotate([
         globeState.rotateLambda,
@@ -248,11 +266,12 @@ const Globe = ({ setSelectedCountry }) => {
         ) : (
           ""
         )}
+
         <circle
           cx={globeState.translateX}
           cy={globeState.translateY}
           r={globeState.scale * globeState.zoom * 1.03}
-          fill="white"
+          fill="transparent"
           stroke="lightblue"
           strokeWidth="5"
           className="blur-md "

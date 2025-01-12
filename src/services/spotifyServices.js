@@ -19,7 +19,7 @@ export async function getPopularSongs(regionCode) {
     });
 
     // Axios automatically parses JSON responses
-    return response.data; // Ensure this matches the expected data structure
+    return response.data.data; // Ensure this matches the expected data structure
   } catch (error) {
     // Enhanced error handling
     if (error.response) {

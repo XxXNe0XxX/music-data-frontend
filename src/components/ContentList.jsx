@@ -75,30 +75,27 @@ function ContentList({ content, selectedCountry, loading, error }) {
         loading={loading}
         error={error}
       ></ContentListHeader>
-
+      <div className="flex justify-between py-2">
+        <span className="flex items-center gap-x-2 ml-2">
+          País: {selectedCountry || "Ninguno"}
+          {flag && (
+            <img
+              src={flag}
+              className="w-14 h-8 object-cover rounded-md"
+              alt="Flag"
+            />
+          )}
+        </span>
+        <PlatformSwitcher></PlatformSwitcher>
+      </div>
       {/* Video List Body */}
-      <div className=" overflow-y-auto ">
+      <div className=" overflow-y-auto mx-2 ">
         {!content.length ? (
-          <h1 className="text-center bg-gray-600 rounded-md opacity-80">
+          <h1 className="text-center bg-gray-600 rounded-md opacity-80 mx-3">
             No hay contenido para mostrar.
           </h1>
         ) : (
-          <ul className="flex flex-col space-y-5 p-2">
-            <div className="flex justify-between">
-              {selectedCountry && (
-                <span className="flex items-center gap-x-2">
-                  Seleccionado: {selectedCountry}
-                  {flag && (
-                    <img
-                      src={flag}
-                      className="w-14 h-8 object-cover rounded-md"
-                      alt="Flag"
-                    />
-                  )}
-                </span>
-              )}
-              <PlatformSwitcher></PlatformSwitcher>
-            </div>
+          <ul className="flex flex-col space-y-3 px-2">
             {currentPlatform == "youtube" ? (
               content?.map((video, i) => {
                 return (

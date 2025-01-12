@@ -21,8 +21,6 @@ function App() {
           setLoading(true);
           const data = await getPopularVideos(selectedCountry);
           setYoutubeData(data.items);
-          console.log(data);
-          console.log("fetching youtube videos");
         } catch (err) {
           setError(err.message || "Error al obtener los videos populares");
         } finally {
@@ -40,7 +38,6 @@ function App() {
           const data = await getPopularSongs(selectedCountry);
           console.log("Spotify Data:", data); // Add this line
           setSpotifyData(data.tracks.items);
-          console.log("Fetching Spotify songs");
         } catch (err) {
           setError(err.message || "Error al obtener las canciones populares");
         } finally {
@@ -53,7 +50,7 @@ function App() {
   }, [selectedCountry, currentPlatform]);
 
   return (
-    <div className="relative bg-black text-sm md:text-base h-screen w-screen overflow-hidden">
+    <div className="relative text-sm md:text-base h-screen w-screen overflow-hidden">
       <Globe setSelectedCountry={setSelectedCountry}></Globe>
       <Starfield
         starCount={100}
