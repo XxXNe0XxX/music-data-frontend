@@ -22,7 +22,6 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: black;
 }
 
 /* Handle */
@@ -35,3 +34,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: lightblue;
 }
+/* In your global CSS or a dedicated stylesheet */
+.flowing-dashed {
+  stroke: rgb(255, 0, 0);
+  stroke-width: 1;
+  stroke-dasharray: 10;          /* How long the dash and gaps are */
+  animation: dashFlow 1s linear infinite;
+}
+
+@keyframes dashFlow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 12;      /* You can adjust this to taste */
+  }
+}
+

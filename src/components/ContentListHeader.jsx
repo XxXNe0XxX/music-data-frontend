@@ -5,6 +5,8 @@ import PlatformContext from "../context/PlatformProvider";
 // 1) Import from Motion
 import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
+import ToggleTheme from "./ToggleTheme";
+import { ThemeContext } from "../context/ThemeContext";
 function ContentListHeader({
   isOpen,
   setIsOpen,
@@ -14,20 +16,7 @@ function ContentListHeader({
   loading,
   error,
 }) {
-  const draw = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: (i) => {
-      const delay = i * 0.5;
-      return {
-        pathLength: 1,
-        opacity: 1,
-        transition: {
-          pathLength: { delay, type: "spring", duration: 1.5, bounce: 0 },
-          opacity: { delay, duration: 0.01 },
-        },
-      };
-    },
-  };
+  const { isDark } = useContext(ThemeContext);
   const { currentPlatform } = useContext(PlatformContext);
   return (
     <div className="relative flex flex-wrap  text-nowrap min-h-44 overflow-hidden">
@@ -49,15 +38,21 @@ function ContentListHeader({
             }`}
           />
         )}
-        <div className="absolute top-0 left-0 bg-gradient-to-r from-black/100 to-gray-50/0 w-[100%] h-[100%]" />
+        <div
+          className={`absolute top-0 left-0 bg-gradient-to-r ${
+            isDark
+              ? "from-black/100 to-gray-50/0"
+              : "from-black/60 to-gray-50/0"
+          } w-[100%] h-[100%]`}
+        />
       </div>
 
       {/* Title + expand button */}
       <div className="flex items-center justify-between w-full z-10 h-12 md:h-20 p-2">
         <h1
-          className={`${
-            isOpen ? "text-3xl" : "text-2xl"
-          } w-full font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-wrap`}
+          className={`${isOpen ? "text-3xl" : "text-2xl"} w-full ${
+            isDark || flag ? "!text-white" : "!text-black"
+          } font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-wrap`}
         >
           {currentPlatform === "youtube"
             ? "Videos"
@@ -109,6 +104,9 @@ function ContentListHeader({
             {/* Videos no disponibles debido a restricciones regionales de youtube. */}
           </h1>
         )}
+      </div>
+      <div>
+        <ToggleTheme></ToggleTheme>
       </div>
     </div>
   );

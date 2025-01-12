@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function Starfield(props) {
+  const { isDark } = useContext(ThemeContext);
   const {
     speedFactor = 0.05,
-    backgroundColor = "black",
-    starColor = [255, 255, 255],
+    backgroundColor = `${isDark ? "black" : "white"}`,
+    starColor = isDark ? [255, 255, 255] : [0, 0, 0],
     starCount = 5000,
   } = props;
 

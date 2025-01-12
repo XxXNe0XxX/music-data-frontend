@@ -49,13 +49,11 @@ function App() {
   }, [selectedCountry, currentPlatform]);
 
   return (
-    <div className="relative text-sm md:text-base h-screen w-screen overflow-hidden">
+    <div className="relative text-sm md:text-base h-screen w-screen overflow-hidden dark:text-white text-black">
       <Globe setSelectedCountry={setSelectedCountry}></Globe>
       <Starfield
-        starCount={100}
-        starColor={[255, 255, 255]}
+        starCount={200}
         speedFactor={0.009}
-        backgroundColor="black"
         className="-z-50 absolute"
       />
       <div className=" absolute right-0 top-0 z-20">

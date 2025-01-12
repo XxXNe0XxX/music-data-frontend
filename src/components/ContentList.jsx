@@ -52,9 +52,9 @@ function ContentList({ content, selectedCountry, loading, error }) {
 
   return (
     <div
-      className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen bg-black/50
+      className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen dark:bg-black/50 backdrop-blur-sm
         ${isOpen ? "h-[94vh]" : " h-12 md:h-20 "}  
-        border-gray-900 border-l border-r border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-lg shadow-black overflow-y-hidden`}
+        dark:border-gray-900 border-l border-r border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-sm shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
       <ContentListHeader
@@ -82,7 +82,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
       {/* Video List Body */}
       <div className=" overflow-y-auto mx-2 ">
         {!content.length ? (
-          <h1 className="text-center bg-gray-600 rounded-md opacity-80 mx-3">
+          <h1 className="text-center dark:bg-gray-600 rounded-md opacity-80 mx-3">
             No hay contenido para mostrar.
           </h1>
         ) : (
@@ -114,7 +114,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
                 );
               })
             ) : (
-              <h1 className="absolute z-50 text-4xl">Something is wrong</h1>
+              <h1 className="absolute z-50 text-4xl">{"Algo salió mal :("}</h1>
             )}
           </ul>
         )}

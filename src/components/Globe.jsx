@@ -8,6 +8,7 @@ import { FaYoutube } from "react-icons/fa";
 import PlatformContext from "../context/PlatformProvider";
 import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
+import { ThemeContext } from "../context/ThemeContext";
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
@@ -41,6 +42,8 @@ const Globe = ({ setSelectedCountry }) => {
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [grat, setGrat] = useState("");
   const { currentPlatform } = useContext(PlatformContext);
+  const { isDark } = useContext(ThemeContext);
+
   // 1) Add rotationSpeed & autoRotate
   const [globeState, setGlobeState] = useState({
     type: "Orthographic",
@@ -243,7 +246,12 @@ const Globe = ({ setSelectedCountry }) => {
         className="absolute z-10"
       >
         {/* Graticule path */}
-        <path strokeWidth="0.2" stroke="white" fill="" d={grat}></path>
+        <path
+          strokeWidth="0.2"
+          stroke={`${isDark ? "white" : "gray"}`}
+          d={grat}
+          fill="transparent"
+        ></path>
         {currentPlatform === "youtube" ? (
           <FaYoutube
             onClick={() => console.log(this)}
@@ -270,7 +278,6 @@ const Globe = ({ setSelectedCountry }) => {
           cx={globeState.translateX}
           cy={globeState.translateY}
           r={globeState.scale * globeState.zoom * 1.03}
-          fill="transparent"
           stroke="lightblue"
           strokeWidth="5"
           className="blur-md "
@@ -286,21 +293,31 @@ const Globe = ({ setSelectedCountry }) => {
               <path
                 key={i}
                 d={d}
-                fill="#1d447e"
-                stroke="black"
-                strokeWidth="1"
-                className="transition-colors z-10"
+                fill={`${isDark ? "#1d447e" : "#D9EAFD"}`}
+                stroke={`${isDark ? "black" : "lightgray"}`}
+                strokeWidth={globeState.zoom}
+                className={`
+                  transition-colors 
+                  z-10 
+                  ${
+                    hoveredCountry &&
+                    hoveredCountry.properties.iso_a3 ===
+                      country.properties.iso_a3
+                      ? "flowing-dashed"
+                      : ""
+                  }
+                `}
                 onClick={() => {
                   setSelectedCountry(
                     convertIsoA3ToIsoA2(country.properties.iso_a3)
                   );
                 }}
                 onMouseOver={(e) => {
-                  e.target.style.fill = "#275cad";
+                  // e.target.style.fill = "#275cad";
                   return setHoveredCountry(country);
                 }}
                 onMouseOut={(e) => {
-                  e.target.style.fill = "#1d447e";
+                  // e.target.style.fill = `${isDark ? "#1d447e" : "#D9EAFD"}`;
                   return setHoveredCountry(null);
                 }}
               />
@@ -342,14 +359,16 @@ const Globe = ({ setSelectedCountry }) => {
                 key={i}
                 x={x}
                 y={y}
-                fill="white"
+                fill={`${isDark ? "white" : "black"}`}
                 fontSize="14"
                 textAnchor="middle"
-                className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+                // className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
                 style={{
                   pointerEvents: "none",
                   opacity: textOpacity,
                   transition: "opacity 0.3s ease",
+                  fontWeight: "bold",
+                  letterSpacing: 1.2,
                 }}
               >
                 {country.properties.name}
@@ -380,10 +399,14 @@ const Globe = ({ setSelectedCountry }) => {
                 <text
                   x={x}
                   y={y}
-                  fill="white"
+                  fill={`${isDark ? "white" : "black"}`}
                   fontSize="14"
                   textAnchor="middle"
-                  style={{ pointerEvents: "none" }}
+                  style={{
+                    pointerEvents: "none",
+                    fontWeight: "bold",
+                    letterSpacing: 1.2,
+                  }}
                 >
                   {hoveredCountry.properties.name}
                 </text>

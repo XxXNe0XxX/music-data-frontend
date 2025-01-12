@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LuEye } from "react-icons/lu";
 import { BiLike } from "react-icons/bi";
 import {
@@ -25,6 +25,7 @@ import { LiaCompactDiscSolid } from "react-icons/lia";
 import { TbChartBarPopular } from "react-icons/tb";
 import AudioControls from "./AudioControls";
 import { useAudio } from "../context/AudioContext";
+import { ThemeContext } from "../context/ThemeContext";
 export default function MusicInfoCard({ songInfo, index }) {
   // Deconstruct data
   const { isPlaying, currentAudioUrl } = useAudio();
@@ -33,7 +34,7 @@ export default function MusicInfoCard({ songInfo, index }) {
   const trackInfo = songInfo.track || {};
   const albumInfo = songInfo.track.album || {};
   const artistsInfo = songInfo.track.artists || {};
-
+  const { isDark } = useContext(ThemeContext);
   return (
     <AnimatePresence>
       <motion.li
@@ -43,7 +44,11 @@ export default function MusicInfoCard({ songInfo, index }) {
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l from-slate-500/20 to-slate-900/80"
+        className={`group rounded-md p-1 border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
+          isDark
+            ? "from-slate-500/20 to-slate-900/80"
+            : "from-slate-300/40 to-slate-100/90"
+        }`}
       >
         {/* --- Top Row: Thumbnail +  --- */}
         <div className="flex gap-2 ">
@@ -94,7 +99,7 @@ export default function MusicInfoCard({ songInfo, index }) {
               {/* Toggle extra channel info */}
               <div className=" flex mr-2 ">
                 <button
-                  className="text-white"
+                  className=""
                   onClick={() => {
                     setIsOpen((prev) => !prev);
                   }}
@@ -139,7 +144,7 @@ export default function MusicInfoCard({ songInfo, index }) {
 
         {/* --- Collapsible Panel for "More Channel Info" --- */}
         <div
-          className={`text-sm transition-all mt-2 bg-gray-800/50 rounded-md px-2 ${
+          className={`text-sm transition-all mt-2 bg-gray-200 dark:bg-gray-800/50 rounded-md px-2 ${
             isOpen ? "max-h-32" : "max-h-0"
           }`}
         >
