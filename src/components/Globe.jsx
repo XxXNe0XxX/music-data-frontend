@@ -74,7 +74,6 @@ const Globe = ({ setSelectedCountry }) => {
       // Compute the diameter
       const diameter = 2 * globeState.scale * 0.5;
       const extraSpace = 500;
-      console.log(diameter + extraSpace, window.innerWidth);
       // Decide how to position X
       // If the globe + 500px is bigger than the screen width,
       // horizontally center it. Otherwise, push it to about 3/4 of the screen.
@@ -295,7 +294,6 @@ const Globe = ({ setSelectedCountry }) => {
                   setSelectedCountry(
                     convertIsoA3ToIsoA2(country.properties.iso_a3)
                   );
-                  return console.log(`Clicked on: ${country.properties.name}`);
                 }}
                 onMouseOver={(e) => {
                   e.target.style.fill = "#275cad";

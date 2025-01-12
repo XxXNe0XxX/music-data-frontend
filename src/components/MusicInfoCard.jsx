@@ -25,7 +25,7 @@ import { LiaCompactDiscSolid } from "react-icons/lia";
 import { TbChartBarPopular } from "react-icons/tb";
 import AudioControls from "./AudioControls";
 import { useAudio } from "../context/AudioContext";
-export default function MusicInfoCard({ songInfo }) {
+export default function MusicInfoCard({ songInfo, index }) {
   // Deconstruct data
   const { isPlaying, currentAudioUrl } = useAudio();
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,10 @@ export default function MusicInfoCard({ songInfo }) {
     <AnimatePresence>
       <motion.li
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{
+          opacity: 1,
+          transition: { delay: index * 0.1, duration: 0.3 },
+        }}
         exit={{ opacity: 0 }}
         className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l from-slate-500/20 to-slate-900/80"
       >
@@ -154,7 +157,7 @@ export default function MusicInfoCard({ songInfo }) {
               return (
                 <li
                   className="flex text-gray-500 rounded-full border-[1px] border-gray-600"
-                  id={artist.id || i}
+                  key={artist.id || i}
                 >
                   <a
                     href={artist.external_urls.spotify}

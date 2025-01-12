@@ -18,15 +18,6 @@ function ContentList({ content, selectedCountry, loading, error }) {
   const [audio, setAudio] = useState("");
 
   useEffect(() => {
-    let beat = new Audio(audio);
-    audio === "" && beat.pause();
-    const playAudio = () => {
-      beat.play();
-    };
-    playAudio(audio);
-  }, [audio]);
-
-  useEffect(() => {
     async function fetchFlag() {
       if (!selectedCountry) {
         setFlag("");
@@ -100,6 +91,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
               content?.map((video, i) => {
                 return (
                   <VideoInfoCard
+                    index={i}
                     key={video.id || i}
                     videoInfo={video}
                     channelInfo={channelInfo}
@@ -114,6 +106,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
                 return (
                   <MusicInfoCard
                     key={song.id || i}
+                    index={i}
                     songInfo={song}
                     setAudio={setAudio}
                     audio={audio}

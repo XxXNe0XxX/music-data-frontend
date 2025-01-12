@@ -15,6 +15,7 @@ import { AnimatePresence } from "motion/react";
 import { IoArrowBackSharp } from "react-icons/io5";
 
 export default function VideoInfoCard({
+  index,
   videoInfo,
   channelInfo,
   handleFetchChannelInfo,
@@ -36,7 +37,10 @@ export default function VideoInfoCard({
     <AnimatePresence>
       <motion.li
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{
+          opacity: 1,
+          transition: { delay: index * 0.1, duration: 0.3 },
+        }}
         exit={{ opacity: 0 }}
         className="group rounded-md p-1 border-opacity-10 shadow-sm shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l from-slate-500/20 to-slate-900/80"
       >

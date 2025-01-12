@@ -36,7 +36,6 @@ function App() {
           setError(null);
           setLoading(true);
           const data = await getPopularSongs(selectedCountry);
-          console.log("Spotify Data:", data); // Add this line
           setSpotifyData(data.tracks.items);
         } catch (err) {
           setError(err.message || "Error al obtener las canciones populares");
