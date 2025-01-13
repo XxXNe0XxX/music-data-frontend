@@ -6,6 +6,7 @@ import ContentListHeader from "./ContentListHeader";
 import PlatformSwitcher from "./PlatformSwitcher";
 import PlatformContext from "../context/PlatformProvider";
 import MusicInfoCard from "./MusicInfoCard";
+import StopAudio from "./StopAudio";
 function ContentList({ content, selectedCountry, loading, error }) {
   const { currentPlatform } = useContext(PlatformContext);
   const [flag, setFlag] = useState("");
@@ -67,8 +68,8 @@ function ContentList({ content, selectedCountry, loading, error }) {
         error={error}
       ></ContentListHeader>
       <hr className="mx-2"></hr>
-      <div className="flex justify-between py-2">
-        <span className="flex items-center gap-x-2 ml-2">
+      <div className="flex justify-between py-2 mx-4">
+        <span className="flex items-center gap-x-2 ml-2 ">
           País: {selectedCountry || "Ninguno"}
           {flag && (
             <img
@@ -77,6 +78,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
               alt="Flag"
             />
           )}
+          <StopAudio></StopAudio>
         </span>
         <PlatformSwitcher></PlatformSwitcher>
       </div>

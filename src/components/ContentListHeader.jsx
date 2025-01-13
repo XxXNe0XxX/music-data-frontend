@@ -105,7 +105,7 @@ function ContentListHeader({
           </h1>
         )}
       </div>
-      <div>
+      <div className="flex items-center justify-center absolute bottom-0">
         <ToggleTheme></ToggleTheme>
       </div>
     </div>

@@ -9,7 +9,7 @@ export default function ToggleTheme() {
 
   return (
     <div
-      className={` absolute bottom-0 p-2 z-20 transition-colors duration-300 
+      className={`p-2 z-20 transition-colors duration-300 
                   ${isDark ? " text-white" : " text-black"} 
                   flex flex-col items-center justify-center`}
     >

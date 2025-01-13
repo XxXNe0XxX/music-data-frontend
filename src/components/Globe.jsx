@@ -278,7 +278,7 @@ const Globe = ({ setSelectedCountry }) => {
           cx={globeState.translateX}
           cy={globeState.translateY}
           r={globeState.scale * globeState.zoom * 1.03}
-          stroke="lightblue"
+          stroke={isDark ? "lightblue" : "gray"}
           strokeWidth="5"
           className="blur-md "
           fillOpacity="0.05"
