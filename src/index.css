@@ -37,7 +37,8 @@
 /* In your global CSS or a dedicated stylesheet */
 .flowing-dashed {
   stroke: rgb(255, 0, 0);
-  stroke-width: 1;
+  stroke-width: 2;
+  stroke-dashoffset: 0;
   stroke-dasharray: 10;          /* How long the dash and gaps are */
   animation: dashFlow 1s linear infinite;
 }

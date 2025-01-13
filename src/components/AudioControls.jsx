@@ -15,7 +15,7 @@ const AudioControls = ({ audioUrl, title }) => {
             togglePlayPause;
           }}
         >
-          <FaPlay></FaPlay>
+          <FaPlay className="dark:hover:text-white hover:text-black transition-colors"></FaPlay>
         </button>
       )}
       {currentAudioUrl === audioUrl && (

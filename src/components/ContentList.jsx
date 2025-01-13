@@ -66,13 +66,14 @@ function ContentList({ content, selectedCountry, loading, error }) {
         loading={loading}
         error={error}
       ></ContentListHeader>
+      <hr className="mx-2"></hr>
       <div className="flex justify-between py-2">
         <span className="flex items-center gap-x-2 ml-2">
           País: {selectedCountry || "Ninguno"}
           {flag && (
             <img
               src={flag}
-              className="w-14 h-8 object-cover rounded-md"
+              className="w-14 h-8 object-cover rounded-md border-[1px] border-gray-500"
               alt="Flag"
             />
           )}
@@ -82,8 +83,8 @@ function ContentList({ content, selectedCountry, loading, error }) {
       {/* Video List Body */}
       <div className=" overflow-y-auto mx-2 ">
         {!content.length ? (
-          <h1 className="text-center dark:bg-gray-600 rounded-md opacity-80 mx-3">
-            No hay contenido para mostrar.
+          <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
+            No hay contenido para mostrar. Selecciona un país.
           </h1>
         ) : (
           <ul className="flex flex-col space-y-3 px-2">

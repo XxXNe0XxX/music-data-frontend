@@ -51,8 +51,10 @@ function ContentListHeader({
       <div className="flex items-center justify-between w-full z-10 h-12 md:h-20 p-2">
         <h1
           className={`${isOpen ? "text-3xl" : "text-2xl"} w-full ${
-            isDark || flag ? "!text-white" : "!text-black"
-          } font-semibold transition-all ml-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-wrap`}
+            isDark || flag
+              ? "!text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+              : "!text-black "
+          } font-semibold transition-all ml-2  text-wrap`}
         >
           {currentPlatform === "youtube"
             ? "Videos"
@@ -63,18 +65,16 @@ function ContentListHeader({
         </h1>
         <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className="text-3xl border-1 border-gray-200 shadow-sm bg-slate-900 shadow-black rounded-md "
+          className="text-3xl border-1  shadow-sm dark:bg-slate-900 bg-slate-50 shadow-black rounded-md "
         >
           <MdOutlineKeyboardDoubleArrowUp
-            className={`${
-              isOpen ? "" : "rotate-180"
-            } transition-all text-gray-200`}
+            className={`${isOpen ? "" : "rotate-180"} transition-all `}
           />
         </button>
       </div>
 
       {/* Loading or error states */}
-      <div className="w-full text-nowrap  z-10 mx-2 flex justify-end items-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+      <div className="w-full text-nowrap mb-5 z-10 mx-2 flex justify-end items-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         {loading && (
           <h1
             initial={{ opacity: 0 }}

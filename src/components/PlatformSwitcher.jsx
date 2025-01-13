@@ -16,7 +16,7 @@ const PlatformSwitcher = () => {
           className={`rounded-md  p-2 transition-colors ${
             currentPlatform === "youtube"
               ? "bg-red-600 text-white border-red-400"
-              : "hover:bg-gray-600 text-gray-300"
+              : "hover:bg-gray-400 "
           }`}
           role="tab"
           aria-selected={currentPlatform === "youtube"}
@@ -31,7 +31,7 @@ const PlatformSwitcher = () => {
           className={`rounded-md p-2 transition-colors ${
             currentPlatform === "spotify"
               ? "bg-green-600 text-white border-green-400"
-              : "hover:bg-gray-600 text-gray-300"
+              : "hover:bg-gray-400 "
           }`}
           role="tab"
           aria-selected={currentPlatform === "spotify"}
