@@ -36,7 +36,7 @@
 }
 /* In your global CSS or a dedicated stylesheet */
 .flowing-dashed {
-  stroke: rgb(255, 0, 0);
+  stroke: rgb(255, 97, 54);
   stroke-width: 2;
   stroke-dashoffset: 0;
   stroke-dasharray: 10;          /* How long the dash and gaps are */

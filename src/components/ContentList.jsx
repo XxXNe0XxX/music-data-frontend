@@ -54,7 +54,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
     <div
       className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen dark:bg-black/50 backdrop-blur-sm
         ${isOpen ? "h-[94vh]" : " h-12 md:h-20 "}  
-        dark:border-gray-900 border-l border-r border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-sm shadow-black overflow-y-hidden`}
+        dark:border-gray-900 md:border-l md:border-r md:border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-sm shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
       <ContentListHeader
@@ -103,7 +103,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
                 );
               })
             ) : currentPlatform == "spotify" ? (
-              content?.map((song, i) => {
+              content?.slice(0, 10).map((song, i) => {
                 return (
                   <MusicInfoCard
                     key={song.id || i}
@@ -111,7 +111,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
                     songInfo={song}
                     setAudio={setAudio}
                     audio={audio}
-                  ></MusicInfoCard>
+                  />
                 );
               })
             ) : (

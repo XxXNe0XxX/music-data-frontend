@@ -206,7 +206,7 @@ const Globe = ({ setSelectedCountry }) => {
   return (
     <>
       {/* A toggle button to start/stop rotation (optional) */}
-      <div className="absolute z-20 flex items-center space-x-3 max-w-screen  pl-2 top-[95vh] border border-gray-500 p-2 ml-2 rounded-md">
+      <div className="absolute z-20 flex items-center space-x-3 max-w-screen  pl-2 top-[95vh]   ml-2 ">
         <button
           onClick={toggleRotation}
           className=" rounded-md opacity-70 hover:opacity-100 transition-opacity  "
