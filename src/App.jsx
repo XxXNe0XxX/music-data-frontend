@@ -53,7 +53,10 @@ function App() {
     <div
       className={`relative text-sm md:text-base h-screen w-screen overflow-hidden dark:text-white text-black font-lexend `}
     >
-      <Globe setSelectedCountry={setSelectedCountry}></Globe>
+      <Globe
+        setSelectedCountry={setSelectedCountry}
+        selectedCountry={selectedCountry}
+      ></Globe>
       <Starfield
         starCount={200}
         speedFactor={0.009}

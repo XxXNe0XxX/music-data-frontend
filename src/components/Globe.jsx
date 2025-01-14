@@ -5,7 +5,13 @@ import { LuTurtle, LuRabbit } from "react-icons/lu";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
 import PlatformContext from "../context/PlatformProvider";
 import { ThemeContext } from "../context/ThemeContext";
-
+import CountrySearch from "./CountrySearch";
+import {
+  FaLocationPin,
+  FaLocationPinLock,
+  FaMapLocation,
+  FaMapLocationDot,
+} from "react-icons/fa6";
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
@@ -33,7 +39,7 @@ function isVisible(lon, lat, [lambdaRotate, phiRotate, gamma]) {
   return dist < 90;
 }
 
-const Globe = ({ setSelectedCountry }) => {
+const Globe = ({ setSelectedCountry, selectedCountry }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [countries, setCountries] = useState([]);
   const [hoveredCountry, setHoveredCountry] = useState(null);
@@ -71,7 +77,16 @@ const Globe = ({ setSelectedCountry }) => {
   });
 
   const lastPointerPosRef = useRef({ x: 0, y: 0 }); // for single-finger drag
-
+  function centerOnCountry(lon, lat) {
+    // We disable auto-rotate so it stays fixed
+    setGlobeState((prev) => ({
+      ...prev,
+      autoRotate: false,
+      // Typically you might clamp lat if needed, but here we'll just do
+      rotateLambda: -lon,
+      rotatePhi: -lat,
+    }));
+  }
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
@@ -305,11 +320,10 @@ const Globe = ({ setSelectedCountry }) => {
 
   return (
     <>
-      {/* Rotation speed / toggle bar */}
-      <div className="absolute z-20 flex items-center space-x-3 max-w-screen pl-2 top-[95vh] ml-2">
+      <div className="absolute flex w-full items-center space-x-3 max-w-screen px-4 py-1  top-[100vh] -translate-y-[45px] z-50 md:bg-transparent dark:md:bg-transparent bg-white dark:bg-black">
         <button
           onClick={toggleRotation}
-          className=" rounded-md opacity-70 hover:opacity-100 transition-opacity"
+          className=" rounded-md opacity-70 hover:opacity-100 transition-opacity text-nowrap"
         >
           {globeState.autoRotate ? "Stop Rotation" : "Start Rotation"}
         </button>
@@ -341,6 +355,16 @@ const Globe = ({ setSelectedCountry }) => {
         >
           <LuRabbit />
         </button>
+
+        <CountrySearch
+          countries={countries}
+          onSelectCountry={(country) => {
+            const [lon, lat] = country.centroidLonLat;
+            centerOnCountry(lon, lat);
+            // Optionally also setSelectedCountry if desired
+            setSelectedCountry(convertIsoA3ToIsoA2(country.properties.iso_a3));
+          }}
+        />
       </div>
 
       <svg
@@ -397,6 +421,11 @@ const Globe = ({ setSelectedCountry }) => {
                 stroke={isDark ? "black" : "white"}
                 strokeWidth="1"
                 className={`transition-colors z-10 ${
+                  convertIsoA3ToIsoA2(country.properties.iso_a3) ===
+                  selectedCountry
+                    ? "flowing-dashed"
+                    : ""
+                } ${
                   hoveredCountry &&
                   hoveredCountry.properties.iso_a3 === country.properties.iso_a3
                     ? "flowing-dashed"
