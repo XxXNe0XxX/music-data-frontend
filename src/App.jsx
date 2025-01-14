@@ -5,6 +5,7 @@ import Globe from "./components/Globe";
 import Starfield from "./components/starfield";
 import PlatformContext from "./context/PlatformProvider";
 import { getPopularSongs } from "./services/spotifyServices";
+import "./App.css";
 function App() {
   const [youtubeData, setYoutubeData] = useState([]);
   const [spotifyData, setSpotifyData] = useState([]);
@@ -49,7 +50,9 @@ function App() {
   }, [selectedCountry, currentPlatform]);
 
   return (
-    <div className="relative text-sm md:text-base h-screen w-screen overflow-hidden dark:text-white text-black">
+    <div
+      className={`relative text-sm md:text-base h-screen w-screen overflow-hidden dark:text-white text-black font-lexend `}
+    >
       <Globe setSelectedCountry={setSelectedCountry}></Globe>
       <Starfield
         starCount={200}

@@ -14,6 +14,7 @@ import { abbreviateNumber } from "../utils/abbreviateNumber";
 import { AnimatePresence } from "motion/react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { ThemeContext } from "../context/ThemeContext";
+import { MdCalendarToday } from "react-icons/md";
 
 export default function VideoInfoCard({
   index,
@@ -139,7 +140,7 @@ export default function VideoInfoCard({
         </div>
         {/* Tags list */}
         {!isSameChannel && (
-          <div className="flex flex-wrap line-clamp-2  font-thin  w-full p-1  items-center justify-start">
+          <div className="flex flex-wrap line-clamp-2 font-light opacity-30 w-full p-1  items-center justify-start">
             {snippet?.tags?.map((tag, i) => {
               if (i < 5 && tag.length < 20) {
                 return (
@@ -177,7 +178,7 @@ export default function VideoInfoCard({
               </span>
             </p>
             <p className="flex items-center gap-x-1 ">
-              <CiCalendarDate />
+              <MdCalendarToday />
               <span title="Fecha de lanzamiento del canal">
                 {new Date(channelSnippet?.publishedAt).toLocaleDateString()}
               </span>

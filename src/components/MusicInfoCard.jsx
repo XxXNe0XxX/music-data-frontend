@@ -26,6 +26,7 @@ import { TbChartBarPopular } from "react-icons/tb";
 import AudioControls from "./AudioControls";
 import { useAudio } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { MdCalendarToday } from "react-icons/md";
 export default function MusicInfoCard({ songInfo, index }) {
   // Deconstruct data
   const { isPlaying, currentAudioUrl } = useAudio();
@@ -135,7 +136,7 @@ export default function MusicInfoCard({ songInfo, index }) {
             </span>
           </p>
           <p className="flex items-center gap-x-1 ">
-            <CiCalendarDate />
+            <MdCalendarToday />
             <span title="Fecha de lanzamiento">
               {new Date(trackInfo?.added_at).toLocaleDateString()}
             </span>
