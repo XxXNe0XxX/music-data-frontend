@@ -5,9 +5,27 @@
     <link rel="icon" type="image/svg+xml" href="/globe.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>International Tube</title>
+      <meta name="description" content="Visualize trending content data across platforms like Spotify and YouTube.">
+      <meta name="keywords" content="Music, Data Visualization, Trends, Spotify, YouTube">
+      <meta name="author" content="Julio Perez ">
+      <meta name="author" content="Jose Marcelo ">
+    
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://music-data-frontend.onrender.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://music-data-frontend.onrender.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+      </script>
+      
   </body>
 </html>
