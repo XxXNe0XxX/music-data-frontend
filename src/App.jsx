@@ -57,8 +57,9 @@ function App() {
         setSelectedCountry={setSelectedCountry}
         selectedCountry={selectedCountry}
       ></Globe>
+
       <Starfield
-        starCount={200}
+        starCount={100}
         speedFactor={0.009}
         className="-z-50 absolute"
       />

@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { useState, useEffect, useRef, useContext } from "react";
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 import { LuTurtle, LuRabbit } from "react-icons/lu";
-import { FaSpotify, FaYoutube } from "react-icons/fa";
+import { FaSearch, FaSpotify, FaYoutube } from "react-icons/fa";
 import PlatformContext from "../context/PlatformProvider";
 import { ThemeContext } from "../context/ThemeContext";
 import CountrySearch from "./CountrySearch";
@@ -12,6 +12,7 @@ import {
   FaMapLocation,
   FaMapLocationDot,
 } from "react-icons/fa6";
+import { IoLocationOutline } from "react-icons/io5";
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
@@ -320,51 +321,54 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
 
   return (
     <>
-      <div className="absolute flex w-full items-center space-x-3 max-w-screen px-4 py-1  top-[100vh] -translate-y-[85px] z-50 md:bg-transparent dark:md:bg-transparent bg-white dark:bg-black">
-        <button
-          onClick={toggleRotation}
-          className=" rounded-md opacity-70 hover:opacity-100 transition-opacity text-nowrap"
-        >
-          {globeState.autoRotate ? "Stop Rotation" : "Start Rotation"}
-        </button>
-        <button
-          className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl"
-          onClick={() => {
-            // Slow rotation
-            setGlobeState((prev) => ({
-              ...prev,
-              rotationSpeed: 0.03,
-            }));
-            // If autoRotate is off, turn it on
-            if (!globeState.autoRotate) toggleRotation();
-          }}
-        >
-          <LuTurtle />
-        </button>
-        <button
-          className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl"
-          onClick={() => {
-            // Fast rotation
-            setGlobeState((prev) => ({
-              ...prev,
-              rotationSpeed: 0.5,
-            }));
-            // If autoRotate is off, turn it on
-            if (!globeState.autoRotate) toggleRotation();
-          }}
-        >
-          <LuRabbit />
-        </button>
-
-        <CountrySearch
-          countries={countries}
-          onSelectCountry={(country) => {
-            const [lon, lat] = country.centroidLonLat;
-            centerOnCountry(lon, lat);
-            // Optionally also setSelectedCountry if desired
-            setSelectedCountry(convertIsoA3ToIsoA2(country.properties.iso_a3));
-          }}
-        />
+      <div className="absolute flex md:w-fit md:h-fit h-full w-full md:items-center items-start  max-w-screen px-4 py-2 dark:border-gray-600 border-t md:border-r border-b top-[100vh] -translate-y-[90px]  md:rounded-r-3xl z-50  md:bg-opacity-20 md:backdrop-blur-sm bg-white dark:bg-black">
+        <div className="flex items-center space-x-3 flex-wrap justify-between flex-grow">
+          <CountrySearch
+            countries={countries}
+            onSelectCountry={(country) => {
+              const [lon, lat] = country.centroidLonLat;
+              centerOnCountry(lon, lat);
+              // Optionally also setSelectedCountry if desired
+              setSelectedCountry(
+                convertIsoA3ToIsoA2(country.properties.iso_a3)
+              );
+            }}
+          />
+          <button
+            onClick={toggleRotation}
+            className=" rounded-md opacity-70 hover:opacity-100 transition-opacity text-nowrap"
+          >
+            {globeState.autoRotate ? "Detener" : "Rotar"}
+          </button>
+          <button
+            className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl"
+            onClick={() => {
+              // Slow rotation
+              setGlobeState((prev) => ({
+                ...prev,
+                rotationSpeed: 0.03,
+              }));
+              // If autoRotate is off, turn it on
+              if (!globeState.autoRotate) toggleRotation();
+            }}
+          >
+            <LuTurtle />
+          </button>
+          <button
+            className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl"
+            onClick={() => {
+              // Fast rotation
+              setGlobeState((prev) => ({
+                ...prev,
+                rotationSpeed: 0.5,
+              }));
+              // If autoRotate is off, turn it on
+              if (!globeState.autoRotate) toggleRotation();
+            }}
+          >
+            <LuRabbit />
+          </button>
+        </div>
       </div>
 
       <svg
@@ -404,9 +408,10 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
           cy={globeState.translateY}
           r={globeState.scale * globeState.zoom * 1.03}
           stroke={isDark ? "lightblue" : "gray"}
+          fill={isDark ? "black" : "white"}
           strokeWidth="5"
           className="blur-md"
-          fillOpacity="0.05"
+          fillOpacity="0.5"
         />
 
         {/* Countries */}

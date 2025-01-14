@@ -85,13 +85,13 @@ function ContentList({ content, selectedCountry, loading, error }) {
       </div>
       <hr className="mx-2"></hr>
       {/* Video List Body */}
-      <div className=" overflow-y-auto mx-2 ">
+      <div className=" overflow-y-auto mx-2 mb-10">
         {!content.length ? (
           <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
-            No hay contenido para mostrar. Selecciona un país.
+            No hay contenido para mostrar
           </h1>
         ) : (
-          <ul className="flex flex-col space-y-3 px-2 mb-10">
+          <ul className="flex flex-col space-y-3 px-2 ">
             {currentPlatform == "youtube" ? (
               content?.map((video, i) => {
                 return (

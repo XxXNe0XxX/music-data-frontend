@@ -22,6 +22,7 @@ const FireText = ({ text }) => {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.3 }}
+            className="text-3xl"
           >
             {text}
           </motion.div>
@@ -34,12 +35,12 @@ const FireText = ({ text }) => {
             id="flame"
             baseFrequency="0.1 0.1"
             numOctaves="3"
-            seed="2"
+            seed="4"
           >
             <animate
               attributeName="baseFrequency"
-              dur="30s"
-              values="0.1 0.1; 0.50 0.50"
+              dur="2s"
+              values="0.3 0.1; 0.1 0.3"
               repeatCount="indefinite"
             />
           </feTurbulence>

@@ -51,19 +51,19 @@ function ContentListHeader({
       {/* Title + expand button */}
       <div className="flex items-center justify-between w-full z-10 h-12 md:h-20 p-2">
         <h1
-          className={`${isOpen ? "text-3xl" : "text-2xl"} w-full ${
+          className={`${isOpen ? "text-2xl" : "text-xl"} w-full ${
             isDark || flag
               ? "!text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
               : "!text-black "
-          } font-semibold transition-all ml-2  text-wrap`}
+          } font-semibold transition-all ml-2 *:flex *:items-center text-wrap`}
         >
           {currentPlatform === "youtube" ? (
-            <span className="flex">
+            <span className="">
               <FireText text={"🔥"} />
               Videos
             </span>
           ) : currentPlatform === "spotify" ? (
-            <span className="flex">
+            <span className="">
               <FireText text={"🔥"} />
               Canciones
             </span>

@@ -1,5 +1,6 @@
 import { useState, useMemo, useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import { FaSearch } from "react-icons/fa";
 
 export default function CountrySearch({ countries, onSelectCountry }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,11 +21,12 @@ export default function CountrySearch({ countries, onSelectCountry }) {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }} className="flex items-center gap-x-3">
+      <FaSearch></FaSearch>
       <input
         type="text"
         value={searchTerm}
-        placeholder="Search country..."
+        placeholder="Buscar país"
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{ width: 200, padding: 6 }}
         className={`rounded-md ${
