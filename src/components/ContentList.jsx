@@ -55,7 +55,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
     <div
       className={`transition-all flex gap-y-1 flex-col max-w-[500px] w-screen dark:bg-black/50 backdrop-blur-sm
         ${isOpen ? "h-[94vh]" : " h-12 md:h-20 "}  
-        dark:border-gray-900 md:border-l md:border-r md:border-b sm:rounded-md  md:mt-4 md:mx-4  shadow-sm shadow-black overflow-y-hidden`}
+        dark:border-gray-600 md:border-l md:border-r border-b border-y-1 sm:rounded-md  md:mt-4 md:mx-4  shadow-sm shadow-black overflow-y-hidden`}
     >
       {/* Header area */}
       <ContentListHeader
@@ -68,7 +68,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
         error={error}
       ></ContentListHeader>
       <hr className="mx-2"></hr>
-      <div className="flex justify-between py-2 mx-4">
+      <div className="flex justify-between py-2 mx-4 items-center flex-wrap *:flex-grow ">
         <span className="flex items-center gap-x-2 ml-2 ">
           País: {selectedCountry || "Ninguno"}
           {flag && (
@@ -78,8 +78,8 @@ function ContentList({ content, selectedCountry, loading, error }) {
               alt="Flag"
             />
           )}
-          <StopAudio></StopAudio>
         </span>
+        <StopAudio></StopAudio>
         <PlatformSwitcher></PlatformSwitcher>
       </div>
       {/* Video List Body */}
