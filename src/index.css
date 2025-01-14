@@ -51,4 +51,20 @@
     stroke-dashoffset: 12;      /* You can adjust this to taste */
   }
 }
+.fire{
+  position: relative;
+  filter:url(#flame)
+}
+.fire div{
+  color: white;
+  position: relative;
+  text-shadow: 0 0 20px #f62817,0 0 40px #f62817,0 0 60px #f62817,0 0 80px #f62817;
+  
+  
+}
+
+.fire-bg{
+  height: 0;
+  width: 0;
+}
 

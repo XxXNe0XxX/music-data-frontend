@@ -7,6 +7,7 @@ import PlatformSwitcher from "./PlatformSwitcher";
 import PlatformContext from "../context/PlatformProvider";
 import MusicInfoCard from "./MusicInfoCard";
 import StopAudio from "./StopAudio";
+import FireText from "./FireText";
 function ContentList({ content, selectedCountry, loading, error }) {
   const { currentPlatform } = useContext(PlatformContext);
   const [flag, setFlag] = useState("");

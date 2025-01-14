@@ -7,6 +7,7 @@ import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
 import ToggleTheme from "./ToggleTheme";
 import { ThemeContext } from "../context/ThemeContext";
+import FireText from "./FireText";
 function ContentListHeader({
   isOpen,
   setIsOpen,
@@ -56,12 +57,19 @@ function ContentListHeader({
               : "!text-black "
           } font-semibold transition-all ml-2  text-wrap`}
         >
-          {currentPlatform === "youtube"
-            ? "Videos"
-            : currentPlatform === "spotify"
-            ? "Canciones"
-            : ""}{" "}
-          🔥
+          {currentPlatform === "youtube" ? (
+            <span className="flex">
+              <FireText text={"🔥"} />
+              Videos
+            </span>
+          ) : currentPlatform === "spotify" ? (
+            <span className="flex">
+              <FireText text={"🔥"} />
+              Canciones
+            </span>
+          ) : (
+            ""
+          )}{" "}
         </h1>
         <button
           onClick={() => setIsOpen((prev) => !prev)}
