@@ -320,7 +320,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
 
   return (
     <>
-      <div className="absolute flex w-full items-center space-x-3 max-w-screen px-4 py-1  top-[100vh] -translate-y-[45px] z-50 md:bg-transparent dark:md:bg-transparent bg-white dark:bg-black">
+      <div className="absolute flex w-full items-center space-x-3 max-w-screen px-4 py-1  top-[100vh] -translate-y-[85px] z-50 md:bg-transparent dark:md:bg-transparent bg-white dark:bg-black">
         <button
           onClick={toggleRotation}
           className=" rounded-md opacity-70 hover:opacity-100 transition-opacity text-nowrap"
