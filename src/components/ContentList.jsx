@@ -85,7 +85,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
       </div>
       <hr className="mx-2"></hr>
       {/* Video List Body */}
-      <div className=" overflow-y-auto mx-2 mb-10">
+      <div className=" overflow-y-auto mx-2 mb-12 *:mb-1">
         {!content.length ? (
           <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
             No hay contenido para mostrar
