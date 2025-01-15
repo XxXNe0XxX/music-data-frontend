@@ -13,8 +13,6 @@ const FireText = ({ text }) => {
     <>
       <div className="fire">
         <AnimatePresence mode="wait">
-          {/* Use text as the 'key' so that AnimatePresence knows to animate
-              in/out whenever the text changes */}
           <motion.div
             key={text}
             variants={containerVariants}

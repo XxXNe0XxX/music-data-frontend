@@ -58,12 +58,12 @@ function ContentListHeader({
           } font-semibold transition-all ml-2 *:flex *:items-center text-wrap`}
         >
           {currentPlatform === "youtube" ? (
-            <span className="">
+            <span className="gap-2">
               <FireText text={"🔥"} />
               Videos
             </span>
           ) : currentPlatform === "spotify" ? (
-            <span className="">
+            <span className="gap-2">
               <FireText text={"🔥"} />
               Canciones
             </span>

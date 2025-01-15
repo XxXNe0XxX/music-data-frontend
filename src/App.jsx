@@ -58,11 +58,7 @@ function App() {
         selectedCountry={selectedCountry}
       ></Globe>
 
-      <Starfield
-        starCount={100}
-        speedFactor={0.009}
-        className="-z-50 absolute"
-      />
+      <Starfield starCount={100} speedFactor={0.2} className="-z-50 absolute" />
       <div className=" absolute right-0 top-0 z-20">
         <ContentList
           content={

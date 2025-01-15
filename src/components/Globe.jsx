@@ -79,15 +79,37 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
 
   const lastPointerPosRef = useRef({ x: 0, y: 0 }); // for single-finger drag
   function centerOnCountry(lon, lat) {
-    // We disable auto-rotate so it stays fixed
     setGlobeState((prev) => ({
       ...prev,
-      autoRotate: false,
-      // Typically you might clamp lat if needed, but here we'll just do
-      rotateLambda: -lon,
-      rotatePhi: -lat,
+      autoRotate: false, // Disable auto-rotate during centering
     }));
+
+    const startLambda = globeState.rotateLambda;
+    const startPhi = globeState.rotatePhi;
+
+    const targetLambda = -lon;
+    const targetPhi = -lat;
+
+    const duration = 1000; // Transition duration in ms
+
+    // Smoothly interpolate rotation
+    const interpolate = d3.interpolate(
+      { lambda: startLambda, phi: startPhi },
+      { lambda: targetLambda, phi: targetPhi }
+    );
+
+    d3.transition()
+      .duration(duration)
+      .tween("rotate", () => (t) => {
+        const { lambda, phi } = interpolate(t);
+        setGlobeState((prev) => ({
+          ...prev,
+          rotateLambda: lambda,
+          rotatePhi: phi,
+        }));
+      });
   }
+
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
@@ -322,7 +344,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
   return (
     <>
       <div className="absolute flex md:w-fit md:h-fit h-full w-full md:items-center items-start  max-w-screen px-4 py-2 dark:border-gray-600 border-t md:border-r border-b top-[100vh] -translate-y-[90px]  md:rounded-r-3xl z-50  md:bg-opacity-20 md:backdrop-blur-sm bg-white dark:bg-black">
-        <div className="flex items-center space-x-3 flex-wrap justify-between flex-grow">
+        <div className="flex items-center space-x-3 flex-wrap justify-start flex-grow">
           <CountrySearch
             countries={countries}
             onSelectCountry={(country) => {
@@ -336,12 +358,12 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
           />
           <button
             onClick={toggleRotation}
-            className=" rounded-md opacity-70 hover:opacity-100 transition-opacity text-nowrap"
+            className=" opacity-70 hover:opacity-100 transition-opacity text-nowrap"
           >
             {globeState.autoRotate ? "Detener" : "Rotar"}
           </button>
           <button
-            className="rounded-md opacity-70 hover:opacity-100 transition-opacity text-2xl"
+            className=" opacity-70 hover:opacity-100 transition-opacity text-2xl"
             onClick={() => {
               // Slow rotation
               setGlobeState((prev) => ({
@@ -380,7 +402,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
         {/* Graticule path */}
         <path
           strokeWidth="0.2"
-          stroke={isDark ? "white" : "gray"}
+          stroke={isDark ? "lightgray" : "gray"}
           d={grat}
           fill="transparent"
         ></path>
@@ -391,14 +413,14 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
             size={globeState.zoom * 200}
             x={globeState.translateX - 100 * globeState.zoom}
             y={globeState.translateY - 100 * globeState.zoom}
-            className="text-red-700 opacity-40"
+            className="text-red-700 opacity-80"
           />
         ) : currentPlatform === "spotify" ? (
           <FaSpotify
             size={globeState.zoom * 200}
             x={globeState.translateX - 100 * globeState.zoom}
             y={globeState.translateY - 100 * globeState.zoom}
-            className="text-green-700 opacity-40"
+            className="text-green-700 opacity-80"
           />
         ) : null}
 

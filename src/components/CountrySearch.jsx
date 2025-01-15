@@ -1,6 +1,6 @@
 import { useState, useMemo, useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import { FaSearch } from "react-icons/fa";
+import { FaRandom, FaSearch } from "react-icons/fa";
 
 export default function CountrySearch({ countries, onSelectCountry }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,19 +21,29 @@ export default function CountrySearch({ countries, onSelectCountry }) {
   };
 
   return (
-    <div style={{ position: "relative" }} className="flex items-center gap-x-3">
-      <FaSearch></FaSearch>
+    <div className="flex items-center gap-x-3 relative">
+      <FaSearch
+        onClick={() => handleSelect(country)}
+        className="absolute right-9 mr-3 z-20 cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
+      ></FaSearch>
       <input
         type="text"
         value={searchTerm}
         placeholder="Buscar país"
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ width: 200, padding: 6 }}
+        style={{ padding: 6 }}
         className={`rounded-md ${
           isDark ? "bg-black border-white" : "bg-white border-black"
-        } border-opacity-65 border`}
+        } border-opacity-65 border transition-opacity `}
       />
-
+      <FaRandom
+        className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
+        onClick={() =>
+          onSelectCountry(
+            countries[Math.floor(Math.random() * countries?.length - 1)]
+          )
+        }
+      ></FaRandom>
       {searchTerm && filteredCountries.length > 0 && (
         <ul
           style={{
@@ -67,6 +77,7 @@ export default function CountrySearch({ countries, onSelectCountry }) {
           ))}
         </ul>
       )}
+      <hr className="w-[1px] h-[35px] z-20 bg-gray-800 dark:bg-white opacity-70 "></hr>
     </div>
   );
 }

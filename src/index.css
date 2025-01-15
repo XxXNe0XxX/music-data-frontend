@@ -36,10 +36,9 @@
 }
 /* In your global CSS or a dedicated stylesheet */
 .flowing-dashed {
-  stroke: rgb(255, 97, 54);
+  stroke: rgb(255, 55, 0);
   stroke-width: 2;
   stroke-dashoffset: 0;
-  stroke-dasharray: 2;          /* How long the dash and gaps are */
   animation: dashFlow 1s linear infinite;
 }
 
@@ -58,7 +57,7 @@
 .fire div{
   color: white;
   position: relative;
-  text-shadow: 0 0 20px #f62817,0 0 40px #f62817,0 0 60px #f62817,0 0 80px #f62817;
+  text-shadow: 0 0 10px #f62817,0 0 20px #f62817,0 0 40px #f62817,0 0 20px #f62817;
   
   
 }
