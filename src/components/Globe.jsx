@@ -344,7 +344,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
   return (
     <>
       <div className="absolute flex md:w-fit md:h-fit h-full w-full md:items-center items-start  max-w-screen px-4 py-2 dark:border-gray-600 border-t md:border-r border-b top-[100vh] -translate-y-[100px]  md:rounded-r-3xl z-50  md:bg-opacity-20 md:backdrop-blur-sm bg-white dark:bg-black">
-        <div className="flex items-center space-x-3 flex-wrap justify-start flex-grow">
+        <div className="flex items-center space-x-3  justify-start flex-grow">
           <CountrySearch
             countries={countries}
             onSelectCountry={(country) => {
