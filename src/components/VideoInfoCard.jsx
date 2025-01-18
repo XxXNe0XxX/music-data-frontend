@@ -46,10 +46,10 @@ export default function VideoInfoCard({
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md p-1 border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-xl bg-gradient-to-l ${
+        className={`group rounded-md border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-xl bg-gradient-to-l ${
           isDark
-            ? "from-slate-500/20 to-slate-900/80"
-            : "from-slate-300/40 to-slate-100/90"
+            ? "from-slate-500/20 to-red-900/80"
+            : "from-slate-300/40 to-red-100/90"
         }`}
       >
         {/* --- Top Row: Thumbnail + Title/Channel --- */}
@@ -62,7 +62,7 @@ export default function VideoInfoCard({
           >
             {isSameChannel ? (
               <img
-                className="object-cover transition-all rounded-full h-20 "
+                className="object-cover transition-all rounded-full h-20 p-2 "
                 src={channelSnippet?.thumbnails?.default?.url}
                 alt={channelSnippet?.title || "Channel thumbnail"}
               />
@@ -252,9 +252,4 @@ VideoInfoCard.propTypes = {
   handleFetchChannelInfo: PropTypes.func.isRequired,
   isOpenChannelInfo: PropTypes.bool,
   setIsOpenChannelInfo: PropTypes.func.isRequired,
-};
-
-VideoInfoCard.defaultProps = {
-  channelInfo: null,
-  isOpenChannelInfo: false,
 };

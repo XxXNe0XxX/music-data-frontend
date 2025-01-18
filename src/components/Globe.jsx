@@ -13,6 +13,7 @@ import {
   FaMapLocationDot,
 } from "react-icons/fa6";
 import { IoLocationOutline } from "react-icons/io5";
+import { SiNetflix } from "react-icons/si";
 // Spherical geometry helpers for “isVisible”
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
@@ -421,6 +422,13 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
             x={globeState.translateX - 100 * globeState.zoom}
             y={globeState.translateY - 100 * globeState.zoom}
             className="text-green-700 opacity-80"
+          />
+        ) : currentPlatform.includes("netflix") ? (
+          <SiNetflix
+            size={globeState.zoom * 200}
+            x={globeState.translateX - 100 * globeState.zoom}
+            y={globeState.translateY - 100 * globeState.zoom}
+            className="text-red-600 opacity-80"
           />
         ) : null}
 

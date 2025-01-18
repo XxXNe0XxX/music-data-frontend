@@ -45,10 +45,10 @@ export default function MusicInfoCard({ songInfo, index }) {
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md p-1 border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
+        className={`group rounded-md border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
           isDark
-            ? "from-slate-500/20 to-slate-900/80"
-            : "from-slate-300/40 to-slate-100/90"
+            ? "from-slate-500/20 to-green-900/80"
+            : "from-slate-300/40 to-green-100/90"
         }`}
       >
         {/* --- Top Row: Thumbnail +  --- */}

@@ -67,6 +67,11 @@ function ContentListHeader({
               <FireText text={"🔥"} />
               Canciones
             </span>
+          ) : currentPlatform.includes("netflix") ? (
+            <span className="gap-2">
+              <FireText text={"🔥"} />
+              Audiovisuales
+            </span>
           ) : (
             ""
           )}{" "}
@@ -128,14 +133,6 @@ ContentListHeader.propTypes = {
   flagError: PropTypes.string,
   loading: PropTypes.bool,
   error: PropTypes.string,
-};
-
-ContentListHeader.defaultProps = {
-  flag: "",
-  flagLoading: false,
-  flagError: null,
-  loading: false,
-  error: null,
 };
 
 export default ContentListHeader;

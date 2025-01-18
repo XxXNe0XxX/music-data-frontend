@@ -5,10 +5,13 @@ import Globe from "./components/Globe";
 import Starfield from "./components/starfield";
 import PlatformContext from "./context/PlatformProvider";
 import { getPopularSongs } from "./services/spotifyServices";
+import { getPopularMovies, getPopularShows } from "./services/netflixServices";
 import "./App.css";
 function App() {
   const [youtubeData, setYoutubeData] = useState([]);
   const [spotifyData, setSpotifyData] = useState([]);
+  const [netflixMoviesData, setNetflixMoviesData] = useState([]);
+  const [netflixShowsData, setNetflixShowsData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -47,6 +50,42 @@ function App() {
 
       fetchSpotifySongs(selectedCountry);
     }
+    if (currentPlatform === "netflixMovies" && selectedCountry) {
+      const fetchNetflixMovies = async () => {
+        try {
+          setError(null);
+          setLoading(true);
+          const data = await getPopularMovies(selectedCountry);
+          setNetflixMoviesData(data);
+        } catch (err) {
+          setError(
+            err.message || "Error al obtener los audiovisuales populares"
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchNetflixMovies(selectedCountry);
+    }
+    if (currentPlatform === "netflixShows" && selectedCountry) {
+      const fetchNetflixShows = async () => {
+        try {
+          setError(null);
+          setLoading(true);
+          const data = await getPopularShows(selectedCountry);
+          setNetflixShowsData(data);
+        } catch (err) {
+          setError(
+            err.message || "Error al obtener los audiovisuales populares"
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchNetflixShows(selectedCountry);
+    }
   }, [selectedCountry, currentPlatform]);
 
   return (
@@ -66,6 +105,10 @@ function App() {
               ? youtubeData
               : currentPlatform === "spotify" && spotifyData
               ? spotifyData
+              : currentPlatform === "netflixMovies" && netflixMoviesData
+              ? netflixMoviesData
+              : currentPlatform === "netflixShows" && netflixShowsData
+              ? netflixShowsData
               : ""
           }
           selectedCountry={selectedCountry}

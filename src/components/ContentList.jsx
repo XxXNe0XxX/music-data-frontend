@@ -8,6 +8,8 @@ import PlatformContext from "../context/PlatformProvider";
 import MusicInfoCard from "./MusicInfoCard";
 import StopAudio from "./StopAudio";
 import FireText from "./FireText";
+import FilmCard from "./FilmCard";
+import ShowCard from "./ShowCard";
 function ContentList({ content, selectedCountry, loading, error }) {
   const { currentPlatform } = useContext(PlatformContext);
   const [flag, setFlag] = useState("");
@@ -18,7 +20,6 @@ function ContentList({ content, selectedCountry, loading, error }) {
   const [channelInfo, setChannelInfo] = useState(null);
   const [isOpenChannelInfo, setIsOpenChannelInfo] = useState(false); // For channel collapsible
   const [audio, setAudio] = useState("");
-
   useEffect(() => {
     async function fetchFlag() {
       if (!selectedCountry) {
@@ -68,9 +69,9 @@ function ContentList({ content, selectedCountry, loading, error }) {
         loading={loading}
         error={error}
       ></ContentListHeader>
-      <hr className="mx-2"></hr>
-      <div className="flex justify-between py-2 mx-4 items-center flex-wrap *:flex-grow ">
-        <span className="flex items-center gap-x-2 ml-2 ">
+      <hr className="mx-2 opacity-30"></hr>
+      <div className="flex justify-between py-2 mx-4 items-center  *:flex-grow ">
+        <span className="flex items-center gap-x-2 ml-2 text-nowrap ">
           País: {selectedCountry || "Ninguno"}
           {flag && (
             <img
@@ -83,16 +84,16 @@ function ContentList({ content, selectedCountry, loading, error }) {
         <StopAudio></StopAudio>
         <PlatformSwitcher></PlatformSwitcher>
       </div>
-      <hr className="mx-2"></hr>
+      <hr className="mx-2 opacity-30"></hr>
       {/* Video List Body */}
       <div className=" overflow-y-auto mx-2 mb-12 *:mb-1">
-        {!content.length ? (
+        {!content ? (
           <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
             No hay contenido para mostrar
           </h1>
         ) : (
           <ul className="flex flex-col space-y-3 px-2 ">
-            {currentPlatform == "youtube" ? (
+            {currentPlatform === "youtube" ? (
               content?.map((video, i) => {
                 return (
                   <VideoInfoCard
@@ -106,7 +107,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
                   />
                 );
               })
-            ) : currentPlatform == "spotify" ? (
+            ) : currentPlatform === "spotify" ? (
               content?.slice(0, 10).map((song, i) => {
                 return (
                   <MusicInfoCard
@@ -117,6 +118,14 @@ function ContentList({ content, selectedCountry, loading, error }) {
                     audio={audio}
                   />
                 );
+              })
+            ) : currentPlatform === "netflixMovies" ? (
+              content?.films?.map((film, i) => {
+                return <FilmCard film={film} key={film.id || i} index={i} />;
+              })
+            ) : currentPlatform === "netflixShows" ? (
+              content?.tv?.map((show, i) => {
+                return <ShowCard show={show} key={show.id || i} index={i} />;
               })
             ) : (
               <h1 className="absolute z-50 text-4xl">{"Algo salió mal :("}</h1>
