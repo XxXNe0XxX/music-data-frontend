@@ -43,7 +43,7 @@ function ContentListHeader({
           className={`absolute top-0 left-0 bg-gradient-to-r ${
             isDark
               ? "from-black/100 to-gray-50/0"
-              : "from-black/60 to-gray-50/0"
+              : "from-black/30 to-gray-50/10"
           } w-[100%] h-[100%]`}
         />
       </div>

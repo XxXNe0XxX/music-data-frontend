@@ -92,7 +92,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
             No hay contenido para mostrar
           </h1>
         ) : (
-          <ul className="flex flex-col *:mb-4 px-2 mx-4 ">
+          <ul className="flex flex-col *:mb-4 px-5 ">
             {currentPlatform === "youtube" ? (
               content?.map((video, i) => {
                 return (

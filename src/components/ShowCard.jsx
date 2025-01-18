@@ -44,7 +44,7 @@ export default function ShowCard({ show, index }) {
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
+        className={`group rounded-md border-opacity-10 shadow-sm shadow-gray-600 overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
           isDark
             ? "from-slate-500/20 to-red-900/80"
             : "from-slate-300/40 to-red-100/90"
@@ -54,7 +54,7 @@ export default function ShowCard({ show, index }) {
         <div className="flex gap-2 ">
           {/* Thumbnail or song's album image */}
           <div
-            className={`flex items-center  w-[45%] max-h-fit justify-center overflow-hidden transition-all `}
+            className={`flex items-center  md:w-[45%] w-[55%] max-h-fit justify-center overflow-hidden transition-all `}
           >
             {isLoading && (
               <h1 className="absolute flex justify-center items-center animate-pulse">
@@ -74,7 +74,7 @@ export default function ShowCard({ show, index }) {
           </div>
 
           {/* Song name and link to the spotify url */}
-          <div className="flex flex-col justify-between flex-grow transition-all w-[55%] ">
+          <div className="flex flex-col justify-between flex-grow transition-all md:w-[55%] w-[45%] ">
             <a
               href={`https://www.google.com/search?q=${show.name + " netflix"}`}
               target="_blank"

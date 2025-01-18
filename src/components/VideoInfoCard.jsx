@@ -46,7 +46,7 @@ export default function VideoInfoCard({
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-xl bg-gradient-to-l ${
+        className={`group rounded-md border-opacity-10 shadow-sm shadow-gray-600 overflow-hidden backdrop-blur-xl bg-gradient-to-l ${
           isDark
             ? "from-slate-500/20 to-red-900/80"
             : "from-slate-300/40 to-red-100/90"
@@ -186,7 +186,7 @@ export default function VideoInfoCard({
           </div>
         ) : (
           // Video-level stats
-          <div className="flex  items-center *:justify-center text-gray-400  *:w-full  mt-1 ">
+          <div className="flex  items-center *:justify-center text-gray-400  *:w-full p-2">
             <p className="flex items-center gap-x-1">
               <LuEye />
               <span title="Total de visualizaciones del video">

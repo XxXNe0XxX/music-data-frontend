@@ -45,7 +45,7 @@ export default function MusicInfoCard({ songInfo, index }) {
           transition: { delay: index * 0.1, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md border-opacity-10 shadow-sm shadow-black dark:shadow-white overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
+        className={`group rounded-md border-opacity-10 shadow-sm shadow-gray-600 overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
           isDark
             ? "from-slate-500/20 to-green-900/80"
             : "from-slate-300/40 to-green-100/90"
@@ -58,7 +58,7 @@ export default function MusicInfoCard({ songInfo, index }) {
             className={`flex items-center  w-[45%] max-h-fit justify-center rounded-full   transition-all `}
           >
             <img
-              className="object-cover transition-all h-20 w-full"
+              className="object-cover transition-all h-28 w-full"
               src={albumInfo?.images[1]?.url || ""}
               alt={trackInfo?.name || "Album thumbnail"}
             />
@@ -116,8 +116,8 @@ export default function MusicInfoCard({ songInfo, index }) {
         {/* Tags list */}
         <div className="flex flex-wrap line-clamp-2  font-thin text-blue-200 w-full p-1  items-center justify-start"></div>
         {/* --- Stats Row --- */}
-        <div className="flex  items-center *:justify-center text-gray-400  *:w-full    ">
-          <div className="flex items-center space-x-2  w-full text-left">
+        <div className="flex  items-center *:justify-center text-gray-400 *:w-full px-2 ">
+          <div className="flex items-center space-x-2  w-full pl-4">
             <AudioControls
               audioUrl={trackInfo.preview_url}
               title={trackInfo.name}
