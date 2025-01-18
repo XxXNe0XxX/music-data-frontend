@@ -30,6 +30,10 @@ import { MdCalendarToday } from "react-icons/md";
 export default function FilmCard({ film, index }) {
   // Deconstruct data
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    setIsLoading(true);
+  }, [film]);
   // Check if this video’s channel matches the loaded `channelInfo`
   const { isDark } = useContext(ThemeContext);
   return (
@@ -51,13 +55,22 @@ export default function FilmCard({ film, index }) {
         <div className="flex gap-2 ">
           {/* Thumbnail or song's album image */}
           <div
-            className={`flex items-center  w-[45%] max-h-fit justify-center transition-all overflow-hidden `}
+            className={`flex items-center  w-[45%] max-h-fit justify-center overflow-hidden transition-all `}
           >
+            {isLoading && (
+              <h1 className="absolute flex justify-center items-center animate-pulse">
+                Cargando Imagen
+              </h1>
+            )}
+
+            {/* Always render the image, but hide it until it's loaded */}
             <img
-              loading="lazy"
-              className="object-cover transition-all h-52 hover:scale-150"
+              className={`object-cover transition-all h-52 hover:scale-150 ${
+                isLoading ? "opacity-0" : "opacity-100"
+              }`}
               src={film.image}
               alt={`${film.name} image`}
+              onLoad={() => setIsLoading(false)}
             />
           </div>
 
@@ -68,7 +81,7 @@ export default function FilmCard({ film, index }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h3 className=" leading-6 hover:underline text-xl p-3">
+              <h3 className=" leading-6 hover:underline text-xl py-3">
                 {film.name}
               </h3>
             </a>

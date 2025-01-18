@@ -439,7 +439,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
           r={globeState.scale * globeState.zoom * 1.03}
           stroke={isDark ? "lightblue" : "gray"}
           fill={isDark ? "black" : "white"}
-          strokeWidth="5"
+          strokeWidth="3"
           className="blur-md"
           fillOpacity="0.5"
         />

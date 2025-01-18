@@ -86,13 +86,13 @@ function ContentList({ content, selectedCountry, loading, error }) {
       </div>
       <hr className="mx-2 opacity-30"></hr>
       {/* Video List Body */}
-      <div className=" overflow-y-auto mx-2 mb-12 *:mb-1">
+      <div className="relative overflow-y-auto  *:mb-1 md:mb-0 mb-12 rounded-md overflow-x-hidden">
         {!content ? (
           <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
             No hay contenido para mostrar
           </h1>
         ) : (
-          <ul className="flex flex-col space-y-3 px-2 ">
+          <ul className="flex flex-col *:mb-4 px-2 mx-4 ">
             {currentPlatform === "youtube" ? (
               content?.map((video, i) => {
                 return (
@@ -131,6 +131,9 @@ function ContentList({ content, selectedCountry, loading, error }) {
               <h1 className="absolute z-50 text-4xl">{"Algo salió mal :("}</h1>
             )}
           </ul>
+        )}
+        {content && (
+          <div className="sticky bottom-0 shadow-[0_20px_20px_20px_rgba(0,0,0,0.5)] shadow-black  w-full"></div>
         )}
       </div>
     </div>

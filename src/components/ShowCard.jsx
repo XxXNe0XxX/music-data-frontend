@@ -16,9 +16,8 @@ import { LiaFileVideoSolid } from "react-icons/lia";
 import { CiCalendarDate, CiPause1, CiPlay1 } from "react-icons/ci";
 import { IoMdMore } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
-import * as motion from "motion/react-client";
 import { abbreviateNumber } from "../utils/abbreviateNumber";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { millisToMinutesAndSeconds } from "../utils/millisToMinutesAndSeconds";
 import { LiaCompactDiscSolid } from "react-icons/lia";
@@ -30,6 +29,10 @@ import { MdCalendarToday } from "react-icons/md";
 export default function ShowCard({ show, index }) {
   // Deconstruct data
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    setIsLoading(true);
+  }, [show]);
   // Check if this video’s channel matches the loaded `channelInfo`
   const { isDark } = useContext(ThemeContext);
   return (
@@ -53,11 +56,20 @@ export default function ShowCard({ show, index }) {
           <div
             className={`flex items-center  w-[45%] max-h-fit justify-center overflow-hidden transition-all `}
           >
+            {isLoading && (
+              <h1 className="absolute flex justify-center items-center animate-pulse">
+                Cargando Imagen
+              </h1>
+            )}
+
+            {/* Always render the image, but hide it until it's loaded */}
             <img
-              loading="lazy"
-              className="object-cover transition-all h-52 hover:scale-150 "
+              className={`object-cover transition-all h-52 hover:scale-150 ${
+                isLoading ? "opacity-0" : "opacity-100"
+              }`}
               src={show.image}
               alt={`${show.name} image`}
+              onLoad={() => setIsLoading(false)}
             />
           </div>
 
@@ -68,9 +80,10 @@ export default function ShowCard({ show, index }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h3 className=" leading-6 hover:underline text-xl p-3">
+              <h1 className=" leading-6 hover:underline text-xl py-3">
                 {show.name}
-              </h3>
+              </h1>
+              <h2 className="opacity-60">{show.season_title}</h2>
             </a>
 
             {/* Channel name or fetch button */}

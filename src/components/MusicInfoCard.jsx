@@ -116,7 +116,7 @@ export default function MusicInfoCard({ songInfo, index }) {
         {/* Tags list */}
         <div className="flex flex-wrap line-clamp-2  font-thin text-blue-200 w-full p-1  items-center justify-start"></div>
         {/* --- Stats Row --- */}
-        <div className="flex  items-center *:justify-center text-gray-400  *:w-full  mt-1 *:ml-6 ">
+        <div className="flex  items-center *:justify-center text-gray-400  *:w-full    ">
           <div className="flex items-center space-x-2  w-full text-left">
             <AudioControls
               audioUrl={trackInfo.preview_url}

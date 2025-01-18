@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaYoutube, FaSpotify } from "react-icons/fa";
 import { SiNetflix } from "react-icons/si";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,6 +10,23 @@ import { FiTv } from "react-icons/fi";
 const PlatformSwitcher = () => {
   const [isNetflixDropdownOpen, setIsNetflixDropdownOpen] = useState(true);
   const { currentPlatform, setCurrentPlatform } = useContext(PlatformContext);
+  useEffect(() => {
+    let timer;
+
+    if (isNetflixDropdownOpen) {
+      timer = setTimeout(() => {
+        setIsNetflixDropdownOpen(false);
+      }, 2500);
+    }
+
+    // Cleanup function: clear the timer when the component unmounts
+    // or before this effect runs again.
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isNetflixDropdownOpen]);
 
   return (
     <ul
@@ -87,7 +104,7 @@ const PlatformSwitcher = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute flex flex-col top-full right-0 gap-y-1 mt-8 z-40  text-center dark:text-white text-black"
+              className="absolute flex flex-col top-full  right-4 gap-y-1 mt-8 z-40  text-center dark:text-white text-black"
             >
               <span
                 onClick={() => {

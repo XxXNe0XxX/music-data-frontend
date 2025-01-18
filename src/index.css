@@ -36,18 +36,24 @@
 }
 /* In your global CSS or a dedicated stylesheet */
 .flowing-dashed {
-  stroke: rgb(255, 55, 0);
+  stroke: rgb(255, 0, 0);
+  fill:rgb(255, 0, 0); 
   stroke-width: 2;
   stroke-dashoffset: 0;
-  animation: dashFlow 1s linear infinite;
+  animation: dashFlow 2s linear infinite;
 }
 
 @keyframes dashFlow {
   0% {
     stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  50%{
+    opacity: 0.5;
   }
   100% {
-    stroke-dashoffset: 12;      /* You can adjust this to taste */
+    stroke-dashoffset: 12;
+    opacity: 1;
   }
 }
 .fire{
