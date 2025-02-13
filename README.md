@@ -29,6 +29,13 @@ This project is built using a modern front-end toolchain:
 
 ---
 
+## Libraries
+
+- **D3 geo** Display geo coordinates
+- **D3 Versor** Controls dragging and zooming with mobile device partial support
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -44,33 +51,39 @@ This project is built using a modern front-end toolchain:
    git clone https://github.com/XxXNe0XxX/music-data-frontend.git
    ```
 
-Navigate to the project directory:
+2. **Navigate to the project directory:**
 
-bash
-Copy
-cd music-data-frontend
-Install dependencies:
+   ```bash
+   cd music-data-frontend
+   ```
 
-bash
-Copy
-npm install
-Run the development server:
+3. **Install dependencies:**
 
-bash
-Copy
-npm run dev
-Open your browser and visit http://localhost:3000 to see the app in action.
+   ```bash
+   npm install
+   ```
 
-Building for Production
+4. **Run the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+Refer to the backend server at https://github.com/1SJulioS1/music-data-visualization-backend
+
+4. **Building for Production**
+
 To create an optimized production build, run:
 
-bash
-Copy
-npm run build
+    ```bash
+    npm run build
+    ```
+
 After building, you can serve the static files from the dist directory with your favorite static server.
 
 Contributing
 Contributions are welcome! If you have suggestions, improvements, or bug fixes, please open an issue or submit a pull request.
 
-License
-This project is licensed under the MIT License.
+## License
+
+    This project is licensed under the MIT License.
