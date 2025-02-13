@@ -73,11 +73,11 @@ Refer to the backend server at https://github.com/1SJulioS1/music-data-visualiza
 
 4. **Building for Production**
 
-To create an optimized production build, run:
+   To create an optimized production build, run:
 
-    ```bash
-    npm run build
-    ```
+   ```bash
+   npm run build
+   ```
 
 After building, you can serve the static files from the dist directory with your favorite static server.
 
