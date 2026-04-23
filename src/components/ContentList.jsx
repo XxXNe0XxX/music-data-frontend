@@ -7,7 +7,6 @@ import PlatformSwitcher from "./PlatformSwitcher";
 import PlatformContext from "../context/PlatformProvider";
 import MusicInfoCard from "./MusicInfoCard";
 import StopAudio from "./StopAudio";
-import FireText from "./FireText";
 import FilmCard from "./FilmCard";
 import ShowCard from "./ShowCard";
 function ContentList({ content, selectedCountry, loading, error }) {
@@ -44,6 +43,10 @@ function ContentList({ content, selectedCountry, loading, error }) {
   }, [selectedCountry]);
 
   async function handleFetchChannelInfo(channelId) {
+    if (!channelId) {
+      setChannelInfo(null);
+      return;
+    }
     try {
       const response = await getChannelInfo(channelId);
       setChannelInfo(response);
@@ -68,11 +71,29 @@ function ContentList({ content, selectedCountry, loading, error }) {
         flagError={flagError}
         loading={loading}
         error={error}
+        message={
+          currentPlatform == "youtube"
+            ? "Extracted from youtube official api"
+            : currentPlatform == "spotify"
+              ? "Extracted from spotify fan charts "
+              : currentPlatform == "netflix"
+                ? "Extracted from netflix fan charts"
+                : ""
+        }
+        link={
+          currentPlatform == "youtube"
+            ? "https://developers.google.com/youtube/v3"
+            : currentPlatform == "spotify"
+              ? "https://charts.spotify.com/home "
+              : currentPlatform == "netflix"
+                ? "https://www.netflix.com/tudum/"
+                : ""
+        }
       ></ContentListHeader>
       <hr className="mx-2 opacity-30"></hr>
       <div className="flex justify-between py-2 mx-4 items-center  *:flex-grow ">
         <span className="flex items-center gap-x-2 ml-2 text-nowrap ">
-          País: {selectedCountry || "Ninguno"}
+          Country: {selectedCountry || "None"}
           {flag && (
             <img
               src={flag}
@@ -89,7 +110,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
       <div className="relative overflow-y-auto  *:mb-1 md:mb-0 mb-12 rounded-md overflow-x-hidden">
         {!content ? (
           <h1 className="text-center dark:bg-gray-600 bg-gray-300 p-10 rounded-md opacity-80 mx-3">
-            No hay contenido para mostrar
+            No content to display
           </h1>
         ) : (
           <ul className="flex flex-col *:mb-4 px-5 ">
@@ -128,7 +149,9 @@ function ContentList({ content, selectedCountry, loading, error }) {
                 return <ShowCard show={show} key={show.id || i} index={i} />;
               })
             ) : (
-              <h1 className="absolute z-50 text-4xl">{"Algo salió mal :("}</h1>
+              <h1 className="absolute z-50 text-4xl">
+                {"Something went wrong :("}
+              </h1>
             )}
           </ul>
         )}

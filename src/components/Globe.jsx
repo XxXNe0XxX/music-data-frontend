@@ -96,7 +96,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
     // Smoothly interpolate rotation
     const interpolate = d3.interpolate(
       { lambda: startLambda, phi: startPhi },
-      { lambda: targetLambda, phi: targetPhi }
+      { lambda: targetLambda, phi: targetPhi },
     );
 
     d3.transition()
@@ -353,7 +353,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
               centerOnCountry(lon, lat);
               // Optionally also setSelectedCountry if desired
               setSelectedCountry(
-                convertIsoA3ToIsoA2(country.properties.iso_a3)
+                convertIsoA3ToIsoA2(country.properties.iso_a3),
               );
             }}
           />
@@ -361,7 +361,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
             onClick={toggleRotation}
             className=" opacity-70 hover:opacity-100 transition-opacity text-nowrap"
           >
-            {globeState.autoRotate ? "Detener" : "Rotar"}
+            {globeState.autoRotate ? "Stop" : "Rotate"}
           </button>
           <button
             className=" opacity-70 hover:opacity-100 transition-opacity text-2xl"
@@ -468,7 +468,7 @@ const Globe = ({ setSelectedCountry, selectedCountry }) => {
                 }`}
                 onClick={() => {
                   setSelectedCountry(
-                    convertIsoA3ToIsoA2(country.properties.iso_a3)
+                    convertIsoA3ToIsoA2(country.properties.iso_a3),
                   );
                 }}
                 onMouseOver={() => setHoveredCountry(country)}

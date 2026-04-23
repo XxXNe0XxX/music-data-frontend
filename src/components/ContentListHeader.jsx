@@ -8,6 +8,7 @@ import * as motion from "motion/react-client";
 import ToggleTheme from "./ToggleTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import FireText from "./FireText";
+import { BsArrowRight } from "react-icons/bs";
 function ContentListHeader({
   isOpen,
   setIsOpen,
@@ -16,6 +17,8 @@ function ContentListHeader({
   flagError,
   loading,
   error,
+  message,
+  link,
 }) {
   const { isDark } = useContext(ThemeContext);
   const { currentPlatform } = useContext(PlatformContext);
@@ -24,11 +27,11 @@ function ContentListHeader({
       {/* Flag loading, error, or the image */}
       <div className="absolute w-full flex items-center justify-center">
         {flagLoading && (
-          <h1 className="absolute bottom-0 left-0 p-1">Cargando bandera...</h1>
+          <h1 className="absolute bottom-0 left-0 p-1">Loading flag...</h1>
         )}
         {flagError && (
           <h1 className="text-right absolute bottom-0 left-0 p-1">
-            Error al cargar la bandera...
+            Error loading flag...
           </h1>
         )}
         {flag && (
@@ -65,12 +68,12 @@ function ContentListHeader({
           ) : currentPlatform === "spotify" ? (
             <span className="gap-2">
               <FireText text={"🔥"} />
-              Canciones
+              Songs
             </span>
           ) : currentPlatform.includes("netflix") ? (
             <span className="gap-2">
               <FireText text={"🔥"} />
-              Audiovisuales
+              Movies & Shows
             </span>
           ) : (
             ""
@@ -114,12 +117,21 @@ function ContentListHeader({
         {error && (
           <h1 className="text-white rounded-md p-1 bg-red-700 text-center leading-4 text-wrap">
             {error}
-            {/* Videos no disponibles debido a restricciones regionales de youtube. */}
+            {/* Videos unavailable due to regional restrictions on YouTube. */}
           </h1>
         )}
       </div>
-      <div className="flex items-center justify-center absolute bottom-0">
+      <div className="flex  justify-center absolute bottom-0 text-white backdrop-blur-xl p-1 rounded-md z-20 mb-2  ">
         <ToggleTheme></ToggleTheme>
+        <a
+          href={link}
+          target="#blank"
+          rel="noopener noreferrer"
+          className="flex hover:underline items-center justify-start "
+        >
+          <p className=" ">{message}</p>
+          <BsArrowRight></BsArrowRight>
+        </a>
       </div>
     </div>
   );
@@ -133,6 +145,8 @@ ContentListHeader.propTypes = {
   flagError: PropTypes.string,
   loading: PropTypes.bool,
   error: PropTypes.string,
+  message: PropTypes.string,
+  link: PropTypes.string,
 };
 
 export default ContentListHeader;

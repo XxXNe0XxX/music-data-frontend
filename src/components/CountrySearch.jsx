@@ -29,7 +29,7 @@ export default function CountrySearch({ countries, onSelectCountry }) {
       <input
         type="text"
         value={searchTerm}
-        placeholder="Buscar país"
+        placeholder="Search country"
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{ padding: 6 }}
         className={`rounded-md ${
@@ -40,7 +40,7 @@ export default function CountrySearch({ countries, onSelectCountry }) {
         className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
         onClick={() =>
           onSelectCountry(
-            countries[Math.floor(Math.random() * countries?.length - 1)]
+            countries[Math.floor(Math.random() * countries?.length - 1)],
           )
         }
       ></FaRandom>

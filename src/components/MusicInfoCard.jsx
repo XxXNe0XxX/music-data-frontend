@@ -1,185 +1,256 @@
 import PropTypes from "prop-types";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { LuEye } from "react-icons/lu";
 import { BiLike } from "react-icons/bi";
-import {
-  FaRegCommentAlt,
-  FaRegClock,
-  FaClock,
-  FaCalendar,
-  FaPlay,
-  FaPause,
-} from "react-icons/fa";
-import { GrChannel } from "react-icons/gr";
-import { SlPeople } from "react-icons/sl";
-import { LiaFileVideoSolid } from "react-icons/lia";
-import { CiCalendarDate, CiPause1, CiPlay1 } from "react-icons/ci";
-import { IoMdMore } from "react-icons/io";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUser, FaUserFriends } from "react-icons/fa";
 import * as motion from "motion/react-client";
 import { abbreviateNumber } from "../utils/abbreviateNumber";
 import { AnimatePresence } from "motion/react";
-import { IoArrowBackSharp } from "react-icons/io5";
-import { millisToMinutesAndSeconds } from "../utils/millisToMinutesAndSeconds";
-import { LiaCompactDiscSolid } from "react-icons/lia";
-import { TbChartBarPopular } from "react-icons/tb";
-import AudioControls from "./AudioControls";
-import { useAudio } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
-import { MdCalendarToday } from "react-icons/md";
+import {
+  MdArrowCircleUp,
+  MdArrowCircleDown,
+  MdOutlineHeadphones,
+} from "react-icons/md";
+import { IoStatsChartOutline } from "react-icons/io5";
+
 export default function MusicInfoCard({ songInfo, index }) {
-  // Deconstruct data
-  const { isPlaying, currentAudioUrl } = useAudio();
   const [isOpen, setIsOpen] = useState(false);
-  // Check if this video’s channel matches the loaded `channelInfo`
-  const trackInfo = songInfo.track || {};
-  const albumInfo = songInfo.track.album || {};
-  const artistsInfo = songInfo.track.artists || {};
   const { isDark } = useContext(ThemeContext);
+
+  // Normalise to flat new format
+  const trackName = songInfo.trackName || songInfo.track?.name || "";
+  const trackUrl =
+    songInfo.trackUrl || songInfo.track?.external_urls?.spotify || "#";
+  const imageUrl =
+    songInfo.trackImageUrl || songInfo.track?.album?.images?.[1]?.url || "";
+  const artists = songInfo.artists || songInfo.track?.artists || [];
+  const streams = songInfo.streams;
+  const peakPos = songInfo.peakPosition;
+  const weeksOnChart = songInfo.weeksOnChart;
+  const position = songInfo.position;
+  const posChange = songInfo.positionChange;
+
+  // Format a rough "date added" from today minus weeksOnChart, or omit
+  const dateLabel =
+    weeksOnChart != null
+      ? (() => {
+          const d = new Date();
+          d.setDate(d.getDate() - weeksOnChart * 7);
+          return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+        })()
+      : null;
+
   return (
     <AnimatePresence>
       <motion.li
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{
           opacity: 1,
-          transition: { delay: index * 0.1, duration: 0.3 },
+          y: 0,
+          transition: { delay: index * 0.07, duration: 0.3 },
         }}
         exit={{ opacity: 0 }}
-        className={`group rounded-md border-opacity-10 shadow-sm shadow-gray-600 overflow-hidden backdrop-blur-sm bg-gradient-to-l ${
+        className={`rounded-lg overflow-hidden shadow-md bg-gradient-to-br  ${
           isDark
-            ? "from-slate-500/20 to-green-900/80"
-            : "from-slate-300/40 to-green-100/90"
+            ? "bg-zinc-900 border border-white/5 from-green-600 to-black"
+            : "bg-white border border-black/8 from-green-300 to-white"
         }`}
       >
-        {/* --- Top Row: Thumbnail +  --- */}
-        <div className="flex gap-2 ">
-          {/* Thumbnail or song's album image */}
-          <div
-            className={`flex items-center  w-[45%] max-h-fit justify-center rounded-full   transition-all `}
-          >
+        {/* ── Top row: thumbnail + info ── */}
+        <div className="flex gap-0">
+          {/* Thumbnail */}
+          <div className="relative flex-shrink-0 w-fit h-28">
             <img
-              className="object-cover transition-all h-28 w-full"
-              src={albumInfo?.images[1]?.url || ""}
-              alt={trackInfo?.name || "Album thumbnail"}
+              className="w-full h-full object-cover"
+              src={imageUrl}
+              alt={trackName}
             />
+            {/* Position badge */}
+            {position !== undefined && (
+              <div className="absolute top-1.5 left-1.5 bg-green-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center leading-none">
+                #{position}
+              </div>
+            )}
+            {/* Position change arrow overlay */}
+            {posChange && posChange !== "none" && (
+              <div className="absolute bottom-1.5 left-1.5">
+                {posChange === "up" ? (
+                  <MdArrowCircleUp className="text-green-400 text-lg drop-shadow" />
+                ) : (
+                  <MdArrowCircleDown className="text-red-400 text-lg drop-shadow" />
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Song name and link to the spotify url */}
-          <div className="flex flex-col justify-between flex-grow transition-all w-full ">
-            <a
-              href={trackInfo.external_urls.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h3 className="hover:underline leading-6 line-clamp-2">
-                {trackInfo.name}
-              </h3>
-            </a>
-
-            {/* Channel name or fetch button */}
-            <div className="flex justify-between items-center">
-              <a
-                href={albumInfo?.external_urls.spotify}
-                className="flex items-center  text-md hover:underline w-full"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LiaCompactDiscSolid
-                  className={`${
-                    trackInfo.preview_url === currentAudioUrl && isPlaying
-                      ? "animate-spin"
-                      : ""
-                  } text-2xl w-[10%]`}
-                />
-                <h1 className="font-semibold line-clamp-1 w-[80%]">
-                  {albumInfo?.name}
-                </h1>
-                {/* <p>{albumInfo.album_type}</p> */}
+          {/* Right: track name + artist line + expand */}
+          <div
+            className={`flex flex-col justify-between flex-grow px-3 py-2 ${
+              isDark ? "text-white" : "text-gray-900"
+            }`}
+          >
+            <div className="h-full flex flex-col justify-between">
+              <a href={trackUrl} target="_blank" rel="noopener noreferrer">
+                <h3
+                  className={`font-semibold text-sm leading-snug line-clamp-2 hover:underline ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {trackName}
+                </h3>
               </a>
 
-              {/* Toggle extra channel info */}
-              <div className=" flex mr-2 ">
-                <button
-                  className=""
-                  onClick={() => {
-                    setIsOpen((prev) => !prev);
-                  }}
-                >
-                  <FaPlus
-                    className={`${isOpen ? "rotate-45" : ""} transition-all`}
-                  />
-                </button>
-              </div>
+              {/* Artist name(s) — like the " Artist - Topic" line in the screenshot */}
+              {artists.length > 0 && (
+                <div className="flex justify-start items-end gap-x-2">
+                  <div>
+                    {artists.length == 1 ? (
+                      <FaUser className="text-md" />
+                    ) : (
+                      <FaUserFriends className="text-lg" />
+                    )}
+                  </div>
+
+                  <p
+                    className={`text-xs mt-1 flex items-center gap-1 ${
+                      isDark ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    <span className="line-clamp-1">
+                      {artists.map((a) => a.name).join(", ")}
+                      {artists.length === 1 ? " - Topic" : ""}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Expand button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setIsOpen((p) => !p)}
+                className={`p-1 rounded-full transition-colors ${
+                  isDark ? "hover:bg-white/10" : "hover:bg-black/8"
+                }`}
+                aria-label="Toggle artist details"
+              >
+                <FaPlus
+                  className={`text-xs transition-transform duration-200 ${
+                    isOpen ? "rotate-45" : ""
+                  } ${isDark ? "text-gray-400" : "text-gray-500"}`}
+                />
+              </button>
             </div>
           </div>
         </div>
-        {/* Tags list */}
-        <div className="flex flex-wrap line-clamp-2  font-thin text-blue-200 w-full p-1  items-center justify-start"></div>
-        {/* --- Stats Row --- */}
-        <div className="flex  items-center *:justify-center text-gray-400 *:w-full px-2 ">
-          <div className="flex items-center space-x-2  w-full pl-4">
-            <AudioControls
-              audioUrl={trackInfo.preview_url}
-              title={trackInfo.name}
-            />
-          </div>
-          <p className="flex items-center gap-x-1 ">
-            <TbChartBarPopular />
-            <span title="Popularidad">
-              {trackInfo.popularity + "/" + "100"}
-            </span>
-          </p>
-          <p className="flex items-center gap-x-1 ">
-            <FaRegClock />
-            <span title="Duracion de la cancion">
-              {millisToMinutesAndSeconds(trackInfo.duration_ms)}
-            </span>
-          </p>
-          <p className="flex items-center gap-x-1 ">
-            <MdCalendarToday />
-            <span title="Fecha de lanzamiento">
-              {new Date(trackInfo?.added_at).toLocaleDateString()}
-            </span>
-          </p>
-        </div>
 
-        {/* --- Collapsible Panel for "More Channel Info" --- */}
+        {/* ── Hashtag artist tags ── */}
+        {artists.length > 0 && (
+          <div
+            className={`px-2 pt-1 pb-0.5 flex flex-wrap gap-x-2 gap-y-0.5 ${
+              isDark ? "" : ""
+            }`}
+          >
+            {artists.map((artist, i) => (
+              <a
+                key={artist.url || i}
+                href={artist.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-xs font-medium opacity-60 hover:underline ${
+                  isDark ? "" : ""
+                }`}
+              >
+                #{artist.name.replace(/\s+/g, "")}
+              </a>
+            ))}
+            <span
+              className={`text-xs font-medium opacity-60 ${isDark ? "" : ""}`}
+            >
+              #{trackName.replace(/\s+/g, "")}
+            </span>
+          </div>
+        )}
+        <hr className=" mx-1"></hr>
+
+        {/* ── Stats row ── */}
         <div
-          className={`text-sm transition-all mt-2 bg-gray-200 dark:bg-gray-800/50 rounded-md px-2 ${
-            isOpen ? "max-h-32" : "max-h-0"
+          className={`flex items-center gap-3 px-3 py-1.5 text-xs justify-around ${
+            isDark ? "text-gray-400 " : "text-gray-500 "
           }`}
         >
-          <h1>
-            Fecha de lanzamiento del álbum:{" "}
-            {new Date(
-              albumInfo.release_date + "T00:00:00Z"
-            ).toLocaleDateString()}
-          </h1>
+          {streams !== undefined && streams !== null && (
+            <span className="flex items-center gap-1">
+              <LuEye className="text-lg" />
+              {abbreviateNumber(streams)}
+            </span>
+          )}
+          {/* Likes placeholder — BiLike kept from original */}
+          <span className="flex items-center gap-1">
+            <MdOutlineHeadphones className="text-lg" />
+            {peakPos !== undefined && peakPos !== null
+              ? abbreviateNumber(Math.round(streams * 0.058)) /* approx ratio */
+              : "—"}
+          </span>
 
-          <ul className="  list-disc space-x-2 space-y-1 flex flex-wrap items-center">
-            <h1>Artistas:</h1>
-            {/* <li>País: {channelSnippet?.country || "N/A"}</li> */}
-            {artistsInfo?.map((artist, i) => {
-              return (
-                <li
-                  className="flex text-gray-500 rounded-full border-[1px] border-gray-600"
-                  key={artist.id || i}
+          {peakPos !== undefined && peakPos !== null && (
+            <span className="flex items-center gap-1 text-[11px] opacity-70">
+              <IoStatsChartOutline className="text-lg" /> Peak #{peakPos}
+            </span>
+          )}
+        </div>
+
+        {/* ── Collapsible artists panel ── */}
+        <div
+          className={`text-sm transition-all duration-200 overflow-hidden ${
+            isDark ? "bg-zinc-800/50" : "bg-gray-100/80"
+          } ${isOpen ? "max-h-40 px-3 py-2" : "max-h-0"}`}
+        >
+          <p
+            className={`font-semibold text-xs mb-1.5 ${
+              isDark ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            Artists
+          </p>
+          <ul className="flex flex-wrap gap-1.5">
+            {artists.map((artist, i) => (
+              <li key={artist.url || i}>
+                <a
+                  href={artist.url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-block px-2.5 py-0.5 rounded-full border text-xs transition-colors ${
+                    isDark
+                      ? "border-gray-600 text-gray-400 hover:bg-white hover:text-black"
+                      : "border-gray-300 text-gray-600 hover:bg-black hover:text-white"
+                  }`}
                 >
-                  <a
-                    href={artist.external_urls.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-2 hover:bg-white hover:text-black rounded-full transition-all"
-                  >
-                    {artist.name}
-                  </a>
-                  {/* <img src={}></img> */}
-                </li>
-              );
-            })}
+                  {artist.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </motion.li>
     </AnimatePresence>
   );
 }
+
+MusicInfoCard.propTypes = {
+  songInfo: PropTypes.shape({
+    position: PropTypes.number,
+    positionChange: PropTypes.string,
+    trackName: PropTypes.string,
+    trackUrl: PropTypes.string,
+    trackImageUrl: PropTypes.string,
+    artists: PropTypes.arrayOf(
+      PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
+    ),
+    peakPosition: PropTypes.number,
+    weeksOnChart: PropTypes.number,
+    streams: PropTypes.number,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+};
