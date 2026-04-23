@@ -4,10 +4,10 @@ import axios from "../api/axios"; // Ensure this points to your configured Axios
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 
 /**
- * Obtiene las canciones más populares de una región específica.
- * @param {string} regionCode - Código de región (ej. "US", "MX").
- * @returns {Promise<Array>} - Lista de canciones populares.
- * @throws {Error} - Si ocurre un error al obtener las canciones.
+ * Gets the most popular songs for a specific region.
+ * @param {string} regionCode - Region code (e.g., "US", "MX").
+ * @returns {Promise<Array>} - List of popular songs.
+ * @throws {Error} - If an error occurs while fetching the songs.
  */
 export async function getPopularSongs(regionCode) {
   try {
@@ -25,23 +25,21 @@ export async function getPopularSongs(regionCode) {
     if (error.response) {
       // The request was made, and the server responded with a status code outside the 2xx range
       console.error(
-        `Error al obtener las canciones: ${error.response.status} - ${error.response.statusText}`
+        `Failed to fetch popular songs: ${error.response.status} - ${error.response.statusText}`,
       );
       throw new Error(
-        `Error al obtener las canciones: ${error.response.statusText}`
+        `Failed to fetch popular songs: ${error.response.statusText}`,
       );
     } else if (error.request) {
       // The request was made, but no response was received
-      console.error(
-        "No se recibió respuesta del servidor al obtener las canciones."
-      );
+      console.error("No server response received when fetching popular songs.");
       throw new Error(
-        "No se recibió respuesta del servidor al obtener las canciones."
+        "No server response received when fetching popular songs.",
       );
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }

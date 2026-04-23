@@ -4,10 +4,10 @@ import axios from "../api/axios"; // Ensure this points to your configured Axios
 import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 
 /**
- * Obtiene las canciones más populares de una región específica.
- * @param {string} regionCode - Código de región (ej. "US", "MX").
- * @returns {Promise<Array>} - Lista de canciones populares.
- * @throws {Error} - Si ocurre un error al obtener las canciones.
+ * Gets the most popular movies for a specific region.
+ * @param {string} regionCode - Region code (e.g., "US", "MX").
+ * @returns {Promise<Array>} - List of popular movies.
+ * @throws {Error} - If an error occurs while fetching the movies.
  */
 export async function getPopularMovies(regionCode) {
   try {
@@ -18,7 +18,7 @@ export async function getPopularMovies(regionCode) {
       `/netflix/popular/movies/${convertedCode}`,
       {
         // You can add additional Axios configurations here if needed
-      }
+      },
     );
 
     // Axios automatically parses JSON responses
@@ -28,23 +28,17 @@ export async function getPopularMovies(regionCode) {
     if (error.response) {
       // The request was made, and the server responded with a status code outside the 2xx range
       console.error(
-        `Error al obtener los audiovisuales: ${error.response.status} - ${error.response.statusText}`
+        `Error fetching movies: ${error.response.status} - ${error.response.statusText}`,
       );
-      throw new Error(
-        `Error al obtener las audiovisuales: ${error.response.statusText}`
-      );
+      throw new Error(`Error fetching movies: ${error.response.statusText}`);
     } else if (error.request) {
       // The request was made, but no response was received
-      console.error(
-        "No se recibió respuesta del servidor al obtener las audiovisuales."
-      );
-      throw new Error(
-        "No se recibió respuesta del servidor al obtener las audiovisuales."
-      );
+      console.error("No server response received when fetching movies.");
+      throw new Error("No server response received when fetching movies.");
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }
@@ -58,7 +52,7 @@ export async function getPopularShows(regionCode) {
       `/netflix/popular/shows/${convertedCode}`,
       {
         // You can add additional Axios configurations here if needed
-      }
+      },
     );
 
     // Axios automatically parses JSON responses
@@ -68,23 +62,17 @@ export async function getPopularShows(regionCode) {
     if (error.response) {
       // The request was made, and the server responded with a status code outside the 2xx range
       console.error(
-        `Error al obtener los audiovisuales: ${error.response.status} - ${error.response.statusText}`
+        `Error fetching shows: ${error.response.status} - ${error.response.statusText}`,
       );
-      throw new Error(
-        `Error al obtener las audiovisuales: ${error.response.statusText}`
-      );
+      throw new Error(`Error fetching shows: ${error.response.statusText}`);
     } else if (error.request) {
       // The request was made, but no response was received
-      console.error(
-        "No se recibió respuesta del servidor al obtener las audiovisuales."
-      );
-      throw new Error(
-        "No se recibió respuesta del servidor al obtener las audiovisuales."
-      );
+      console.error("No server response received when fetching shows.");
+      throw new Error("No server response received when fetching shows.");
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }

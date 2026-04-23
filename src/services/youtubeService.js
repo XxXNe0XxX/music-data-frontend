@@ -4,110 +4,98 @@ import { convertIsoA3ToIsoA2 } from "../utils/countryCodeConverter";
 import axios from "../api/axios"; // Ensure this points to your configured Axios instance
 
 /**
- * Obtiene los videos más populares de una región específica.
- * @param {string} regionCode - Código de región (ej. "US", "MX").
- * @returns {Promise<Object>} - Lista de videos populares.
- * @throws {Error} - Si ocurre un error al obtener los videos.
+ * Gets the most popular videos for a specific region.
+ * @param {string} regionCode - Region code (e.g., "US", "MX").
+ * @returns {Promise<Object>} - List of popular videos.
+ * @throws {Error} - If an error occurs while fetching the videos.
  */
 export async function getPopularVideos(regionCode) {
   try {
     const response = await axios.get(`youtube/popular/videos/${regionCode}`);
-    return response.data.data; // Axios automáticamente parsea el JSON
+    return response.data.data; // Axios automatically parses JSON
   } catch (error) {
-    // Manejo de errores más detallado
+    // More detailed error handling
     if (error.response) {
-      // El servidor respondió con un estado fuera del rango 2xx
+      // The server responded with a status outside the 2xx range
       console.error(
-        `Error al obtener los videos: ${error.response.status} - ${error.response.statusText}`
+        `Error fetching videos: ${error.response.status} - ${error.response.statusText}`,
       );
-      throw new Error(
-        `Error al obtener los videos: ${error.response.statusText}`
-      );
+      throw new Error(`Error fetching videos: ${error.response.statusText}`);
     } else if (error.request) {
-      // La solicitud fue hecha pero no hubo respuesta
-      console.error(
-        "No se recibió respuesta del servidor al obtener los videos."
-      );
-      throw new Error(
-        "No se recibió respuesta del servidor al obtener los videos."
-      );
+      // The request was made but no response was received
+      console.error("No server response received when fetching videos.");
+      throw new Error("No server response received when fetching videos.");
     } else {
-      // Algo ocurrió al configurar la solicitud que desencadenó un error
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      // Something happened in setting up the request that triggered an error
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }
 
 /**
- * Obtiene la información del canal de un canal específico.
- * @param {string} channelId - ID del canal.
- * @returns {Promise<Object>} - Información del canal.
- * @throws {Error} - Si ocurre un error al obtener la información del canal.
+ * Gets the channel information for a specific channel.
+ * @param {string} channelId - Channel ID.
+ * @returns {Promise<Object>} - Channel information.
+ * @throws {Error} - If an error occurs while fetching the channel information.
  */
 export async function getChannelInfo(channelId) {
   try {
     const response = await axios.get(`youtube/popular/channel/${channelId}`);
-    return response.data.data; // Axios automáticamente parsea el JSON
+    return response.data.data; // Axios automatically parses JSON
   } catch (error) {
     if (error.response) {
       console.error(
-        `Error al obtener la información del canal: ${error.response.status} - ${error.response.statusText}`
+        `Error fetching channel information: ${error.response.status} - ${error.response.statusText}`,
       );
       throw new Error(
-        `Error al obtener la información del canal: ${error.response.statusText}`
+        `Error fetching channel information: ${error.response.statusText}`,
       );
     } else if (error.request) {
       console.error(
-        "No se recibió respuesta del servidor al obtener la información del canal."
+        "No server response received when fetching channel information.",
       );
       throw new Error(
-        "No se recibió respuesta del servidor al obtener la información del canal."
+        "No server response received when fetching channel information.",
       );
     } else {
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }
 
 /**
- * Obtiene la bandera de una región específica.
- * @param {string} regionCode - Código de región (ej. "US", "MX").
- * @returns {Promise<string>} - URL de la bandera en formato base64.
- * @throws {Error} - Si ocurre un error al obtener la bandera.
+ * Gets the flag for a specific region.
+ * @param {string} regionCode - Region code (e.g., "US", "MX").
+ * @returns {Promise<string>} - Flag URL in base64 format.
+ * @throws {Error} - If an error occurs while fetching the flag.
  */
 export async function getFlag(regionCode) {
   try {
     const convertedCode = convertIsoA3ToIsoA2(regionCode);
     const response = await axios.get(`youtube/flag/${convertedCode}`, {
-      responseType: "arraybuffer", // Necesario para manejar datos binarios
+      responseType: "arraybuffer", // Necessary to handle binary data
     });
 
-    // Convertir el ArrayBuffer a una cadena base64
+    // Convert the ArrayBuffer to a base64 string
     const base64String = btoa(
-      String.fromCharCode(...new Uint8Array(response.data))
+      String.fromCharCode(...new Uint8Array(response.data)),
     );
 
     return `data:image/png;base64,${base64String}`;
   } catch (error) {
     if (error.response) {
       console.error(
-        `Error al obtener la bandera: ${error.response.status} - ${error.response.statusText}`
+        `Error fetching flag: ${error.response.status} - ${error.response.statusText}`,
       );
-      throw new Error(
-        `Error al obtener la bandera: ${error.response.statusText}`
-      );
+      throw new Error(`Error fetching flag: ${error.response.statusText}`);
     } else if (error.request) {
-      console.error(
-        "No se recibió respuesta del servidor al obtener la bandera."
-      );
-      throw new Error(
-        "No se recibió respuesta del servidor al obtener la bandera."
-      );
+      console.error("No server response received when fetching the flag.");
+      throw new Error("No server response received when fetching the flag.");
     } else {
-      console.error(`Error al configurar la solicitud: ${error.message}`);
-      throw new Error(`Error al configurar la solicitud: ${error.message}`);
+      console.error(`Error setting up the request: ${error.message}`);
+      throw new Error(`Error setting up the request: ${error.message}`);
     }
   }
 }
