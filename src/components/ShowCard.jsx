@@ -58,28 +58,30 @@ export default function ShowCard({ show, index }) {
           >
             {isLoading && (
               <h1 className="absolute flex justify-center items-center animate-pulse">
-                Cargando Imagen
+                Loading Image
               </h1>
             )}
 
             {/* Always render the image, but hide it until it's loaded */}
-            <img
-              className={`object-cover transition-all h-52 hover:scale-150 ${
-                isLoading ? "opacity-0" : "opacity-100"
-              }`}
-              src={show.image}
-              alt={`${show.name} image`}
-              onLoad={() => setIsLoading(false)}
-            />
+            <div className="flex items-center justify-center group">
+              <img
+                className={`object-cover transition-transform h-52 group-hover:scale-105  ${
+                  isLoading ? "opacity-0" : "opacity-100"
+                }`}
+                src={show.image}
+                alt={`${show.name} image`}
+                onLoad={() => setIsLoading(false)}
+              />
+              <img
+                src={show.titleImage}
+                className="absolute z-10 scale-[30%] group-hover:scale-50 mt-10 transition-transform duration-300"
+              ></img>
+            </div>
           </div>
 
           {/* Song name and link to the spotify url */}
           <div className="flex flex-col justify-between flex-grow transition-all md:w-[55%] w-[45%] ">
-            <a
-              href={`https://www.google.com/search?q=${show.name + " netflix"}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={show.watchUrl} target="_blank" rel="noopener noreferrer">
               <h1 className=" leading-6 hover:underline text-xl py-3">
                 {show.name}
               </h1>
@@ -118,10 +120,8 @@ export default function ShowCard({ show, index }) {
           }`}
         >
           <h1 className="flex justify-between p-1">
-            Semanas seguidas en el top:{" "}
-            <span className=" font-light">
-              {show.cumulative_weeks_in_top_10}
-            </span>
+            Cumulative weeks on top:{" "}
+            <span className=" font-light">{show.weeksOnChart || 0}</span>
           </h1>
         </div>
       </motion.li>

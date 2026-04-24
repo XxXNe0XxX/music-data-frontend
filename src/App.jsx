@@ -26,7 +26,7 @@ function App() {
           const data = await getPopularVideos(selectedCountry);
           setYoutubeData(data.items);
         } catch (err) {
-          setError(err.message || "Error al obtener los videos populares");
+          setError(err.message || "Failed to get popular videos");
         } finally {
           setLoading(false);
         }
@@ -42,7 +42,7 @@ function App() {
           const data = await getPopularSongs(selectedCountry);
           setSpotifyData(data);
         } catch (err) {
-          setError(err.message || "Error al obtener las canciones populares");
+          setError(err.message || "Failed to get popular songs");
         } finally {
           setLoading(false);
         }
@@ -58,9 +58,7 @@ function App() {
           const data = await getPopularMovies(selectedCountry);
           setNetflixMoviesData(data);
         } catch (err) {
-          setError(
-            err.message || "Error al obtener los audiovisuales populares"
-          );
+          setError(err.message || "Failed to get popular movies");
         } finally {
           setLoading(false);
         }
@@ -76,9 +74,7 @@ function App() {
           const data = await getPopularShows(selectedCountry);
           setNetflixShowsData(data);
         } catch (err) {
-          setError(
-            err.message || "Error al obtener los audiovisuales populares"
-          );
+          setError(err.message || "Failed to get popular shows");
         } finally {
           setLoading(false);
         }
@@ -104,12 +100,12 @@ function App() {
             currentPlatform === "youtube" && youtubeData
               ? youtubeData
               : currentPlatform === "spotify" && spotifyData
-              ? spotifyData
-              : currentPlatform === "netflixMovies" && netflixMoviesData
-              ? netflixMoviesData
-              : currentPlatform === "netflixShows" && netflixShowsData
-              ? netflixShowsData
-              : ""
+                ? spotifyData
+                : currentPlatform === "netflixMovies" && netflixMoviesData
+                  ? netflixMoviesData
+                  : currentPlatform === "netflixShows" && netflixShowsData
+                    ? netflixShowsData
+                    : ""
           }
           selectedCountry={selectedCountry}
           loading={loading}

@@ -53,34 +53,36 @@ export default function FilmCard({ film, index }) {
       >
         {/* --- Top Row: Thumbnail +  --- */}
         <div className="flex gap-2 ">
-          {/* Thumbnail or song's album image */}
+          {/* Movie/show image */}
           <div
-            className={`flex items-center  md:w-[45%] w-[55%] max-h-fit justify-center overflow-hidden transition-all `}
+            className={`  flex  items-center  md:w-[45%] w-[55%] max-h-fit justify-center overflow-hidden transition-all `}
           >
             {isLoading && (
               <h1 className="absolute flex justify-center items-center animate-pulse">
-                Cargando Imagen
+                Loading Image
               </h1>
             )}
+            <div className="flex items-center justify-center group">
+              <img
+                className={`object-cover transition-transform h-52 group-hover:scale-105  ${
+                  isLoading ? "opacity-0" : "opacity-100"
+                }`}
+                src={film.image}
+                alt={`${film.name} image`}
+                onLoad={() => setIsLoading(false)}
+              />
+              <img
+                src={film.titleImage}
+                className="absolute z-10 scale-[30%] group-hover:scale-50 mt-10 transition-transform duration-300"
+              ></img>
+            </div>
 
             {/* Always render the image, but hide it until it's loaded */}
-            <img
-              className={`object-cover transition-all h-52 hover:scale-150 ${
-                isLoading ? "opacity-0" : "opacity-100"
-              }`}
-              src={film.image}
-              alt={`${film.name} image`}
-              onLoad={() => setIsLoading(false)}
-            />
           </div>
 
-          {/* Song name and link to the spotify url */}
+          {/* Movie/show url to netflix */}
           <div className="flex flex-col justify-between flex-grow transition-all md:w-[55%] w-[45%] ">
-            <a
-              href={`https://www.google.com/search?q=${film.name + " netflix"}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={film.watchUrl} target="_blank" rel="noopener noreferrer">
               <h3 className=" leading-6 hover:underline text-xl py-3">
                 {film.name}
               </h3>
@@ -118,10 +120,8 @@ export default function FilmCard({ film, index }) {
           }`}
         >
           <h1 className="flex justify-between p-1">
-            Semanas seguidas en el top:{" "}
-            <span className=" font-light">
-              {film.cumulative_weeks_in_top_10}
-            </span>
+            Cumulative weeks on top:{" "}
+            <span className=" font-light">{film.weeksOnChart || 0}</span>
           </h1>
         </div>
       </motion.li>

@@ -117,7 +117,7 @@ const PlatformSwitcher = () => {
                     : "dark:bg-black bg-white text-black dark:text-white"
                 } flex items-center justify-start gap-x-1 cursor-pointer hover:opacity-90   transition-all rounded-md  min-w-12 p-2  text-sm  `}
               >
-                <MdLocalMovies className="text-lg ml-1" /> Cine
+                <MdLocalMovies className="text-lg ml-1" /> Movies
               </span>
               <span
                 onClick={() => {
@@ -131,7 +131,7 @@ const PlatformSwitcher = () => {
                 } flex items-center justify-start gap-x-1 cursor-pointer opacity-90 hover:opacity-100   transition-all rounded-md  min-w-12 p-2  text-sm  `}
               >
                 <FiTv className="text-lg mb-[2px] ml-1" />
-                TV
+                Shows
               </span>
             </motion.div>
           )}

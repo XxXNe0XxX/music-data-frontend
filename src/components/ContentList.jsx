@@ -76,7 +76,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
             ? "Extracted from youtube official api"
             : currentPlatform == "spotify"
               ? "Extracted from spotify fan charts "
-              : currentPlatform == "netflix"
+              : currentPlatform.includes("netflix")
                 ? "Extracted from netflix fan charts"
                 : ""
         }
@@ -85,7 +85,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
             ? "https://developers.google.com/youtube/v3"
             : currentPlatform == "spotify"
               ? "https://charts.spotify.com/home "
-              : currentPlatform == "netflix"
+              : currentPlatform.includes("netflix")
                 ? "https://www.netflix.com/tudum/"
                 : ""
         }
