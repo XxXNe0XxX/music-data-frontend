@@ -81,11 +81,17 @@ export default function ShowCard({ show, index }) {
 
           {/* Song name and link to the spotify url */}
           <div className="flex flex-col justify-between flex-grow transition-all md:w-[55%] w-[45%] ">
-            <a href={show.watchUrl} target="_blank" rel="noopener noreferrer">
-              <h1 className=" leading-6 hover:underline text-xl py-3">
+            <a
+              href={
+                show.watchUrl ||
+                `https://www.google.com/search?q=site:netflix.com+"${encodeURIComponent(show.name)}"`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <h3 className="leading-6 hover:underline text-xl py-3">
                 {show.name}
-              </h1>
-              <h2 className="opacity-60">{show.season_title}</h2>
+              </h3>
             </a>
 
             {/* Channel name or fetch button */}

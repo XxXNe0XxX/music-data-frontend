@@ -82,8 +82,15 @@ export default function FilmCard({ film, index }) {
 
           {/* Movie/show url to netflix */}
           <div className="flex flex-col justify-between flex-grow transition-all md:w-[55%] w-[45%] ">
-            <a href={film.watchUrl} target="_blank" rel="noopener noreferrer">
-              <h3 className=" leading-6 hover:underline text-xl py-3">
+            <a
+              href={
+                film.watchUrl ||
+                `https://www.google.com/search?q=site:netflix.com+"${encodeURIComponent(film.name)}"`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <h3 className="leading-6 hover:underline text-xl py-3">
                 {film.name}
               </h3>
             </a>
