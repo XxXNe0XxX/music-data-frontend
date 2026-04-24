@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import PropTypes from "prop-types";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
 import PlatformContext from "../context/PlatformProvider";
@@ -9,6 +9,7 @@ import ToggleTheme from "./ToggleTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import FireText from "./FireText";
 import { BsArrowRight } from "react-icons/bs";
+import { FaExternalLinkAlt } from "react-icons/fa";
 function ContentListHeader({
   isOpen,
   setIsOpen,
@@ -88,7 +89,7 @@ function ContentListHeader({
           />
         </button>
       </div>
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-end  w-full">
         <div className="flex  justify-center  bottom-0 text-white backdrop-blur-xl p-1 rounded-md z-20 mb-5  ">
           <ToggleTheme></ToggleTheme>
           {link && (
@@ -98,8 +99,8 @@ function ContentListHeader({
               rel="noopener noreferrer"
               className="flex hover:underline items-center justify-start "
             >
-              <p className=" ">{message}</p>
-              <BsArrowRight></BsArrowRight>
+              <p className="text-sm pr-2">{message}</p>
+              <FaExternalLinkAlt />
             </a>
           )}
         </div>

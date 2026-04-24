@@ -71,15 +71,16 @@ function ContentList({ content, selectedCountry, loading, error }) {
         flagError={flagError}
         loading={loading}
         error={error}
-        message={
+        message={` SRC: ${
           currentPlatform == "youtube"
-            ? "Extracted from youtube official api"
+            ? "Youtube Official API"
             : currentPlatform == "spotify"
-              ? "Extracted from spotify fan charts "
+              ? "Spotify Fan Charts "
               : currentPlatform.includes("netflix")
-                ? "Extracted from netflix fan charts"
+                ? "TUDUM By Netflix"
                 : ""
         }
+        `}
         link={
           currentPlatform == "youtube"
             ? "https://developers.google.com/youtube/v3"
