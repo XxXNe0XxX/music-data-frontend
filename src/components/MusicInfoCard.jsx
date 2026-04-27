@@ -21,18 +21,35 @@ export default function MusicInfoCard({ songInfo, index }) {
   // Normalise to flat new format
   const trackName = songInfo.trackName || songInfo.track?.name || "";
   const trackUrl =
-    songInfo.trackUrl || songInfo.track?.external_urls?.spotify || "#";
+    songInfo.trackUrl ||
+    songInfo.track?.external_urls?.spotify ||
+    (songInfo.trackId
+      ? `https://open.spotify.com/track/${songInfo.trackId}`
+      : "#");
   const imageUrl =
     songInfo.trackImageUrl ||
     songInfo.track?.album?.images?.[1]?.url ||
     songInfo.imageUrl ||
     "";
-  const artists = songInfo.artists || songInfo.track?.artists || [];
+  const artists = (songInfo.artists || songInfo.track?.artists || []).map(
+    (artist) => ({
+      name: artist.name,
+      url:
+        artist.url ||
+        (artist.id ? `https://open.spotify.com/artist/${artist.id}` : "#"),
+    }),
+  );
   const streams = songInfo.streams;
-  const peakPos = songInfo.peakPosition;
+  const peakPos = songInfo.peakPosition || songInfo.peakRank;
   const weeksOnChart = songInfo.weeksOnChart;
   const position = songInfo.rank;
-  const posChange = songInfo.positionChange;
+  const posChange =
+    songInfo.positionChange ||
+    (songInfo.entryStatus === "MOVED_UP"
+      ? "up"
+      : songInfo.entryStatus === "MOVED_DOWN"
+        ? "down"
+        : "none");
   const relaseDate = songInfo.releaseDate;
 
   // Format a rough "date added" from today minus weeksOnChart, or omit
