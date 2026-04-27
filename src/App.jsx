@@ -6,6 +6,8 @@ import Starfield from "./components/starfield";
 import PlatformContext from "./context/PlatformProvider";
 import { getPopularSongs } from "./services/spotifyServices";
 import { getPopularMovies, getPopularShows } from "./services/netflixServices";
+import { ThemeContext } from "./context/ThemeContext";
+import { LuInfo } from "react-icons/lu";
 import "./App.css";
 function App() {
   const [youtubeData, setYoutubeData] = useState([]);
@@ -15,7 +17,17 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
   const { currentPlatform } = useContext(PlatformContext);
+  const { isDark } = useContext(ThemeContext);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      setShowInfoPopup(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
 
   useEffect(() => {
     if (currentPlatform === "youtube" && selectedCountry) {
@@ -94,6 +106,19 @@ function App() {
       ></Globe>
 
       <Starfield starCount={100} speedFactor={0.2} className="-z-50 absolute" />
+      <div className="absolute md:top-4 top-14 left-4 z-10">
+        <button
+          onClick={() => setShowInfoPopup(true)}
+          className={`p-2 rounded-full transition-colors ${
+            isDark
+              ? "bg-gray-800 text-white hover:bg-gray-700"
+              : "bg-white text-black hover:bg-gray-100"
+          } shadow-lg`}
+          aria-label="Show info"
+        >
+          <LuInfo size={20} />
+        </button>
+      </div>
       <div className=" absolute right-0 top-0 z-20">
         <ContentList
           content={
@@ -112,6 +137,30 @@ function App() {
           error={error}
         />
       </div>
+      {showInfoPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div
+            className={`p-6 rounded-lg max-w-md mx-4 ${isDark ? "bg-gray-800 text-white" : "bg-white text-black"} shadow-xl`}
+          >
+            <h2 className="text-xl font-bold mb-4">
+              Welcome to Music Data Frontend!
+            </h2>
+            <p className="mb-4">
+              This app displays popular content from YouTube, Spotify, and
+              Netflix based on the selected country. Click anywhere on the globe
+              to start to explore trending music, videos, movies, and shows.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowInfoPopup(false)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
