@@ -71,7 +71,7 @@ function ContentList({ content, selectedCountry, loading, error }) {
         flagError={flagError}
         loading={loading}
         error={error}
-        message={` SRC: ${
+        srcInfo={` SRC: ${
           currentPlatform == "youtube"
             ? "Youtube Official API"
             : currentPlatform == "spotify"
@@ -90,6 +90,16 @@ function ContentList({ content, selectedCountry, loading, error }) {
                 ? "https://www.netflix.com/tudum/"
                 : ""
         }
+        message={` ${
+          currentPlatform == "youtube"
+            ? "Usually very fast, youtube regional restrictions apply"
+            : currentPlatform == "spotify"
+              ? "It might be slow due to Spotify's charts auth system, not available for all countries"
+              : currentPlatform.includes("netflix")
+                ? "Generally fast, images might not render after a while due to too many requests, not available for all countries"
+                : ""
+        }
+        `}
       ></ContentListHeader>
       <hr className="mx-2 opacity-30"></hr>
       <div className="flex justify-between py-2 mx-4 items-center  *:flex-grow ">

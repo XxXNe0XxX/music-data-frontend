@@ -10,6 +10,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import FireText from "./FireText";
 import { BsArrowRight } from "react-icons/bs";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { BiInfoCircle } from "react-icons/bi";
 function ContentListHeader({
   isOpen,
   setIsOpen,
@@ -18,8 +19,9 @@ function ContentListHeader({
   flagError,
   loading,
   error,
-  message,
+  srcInfo,
   link,
+  message,
 }) {
   const { isDark } = useContext(ThemeContext);
   const { currentPlatform } = useContext(PlatformContext);
@@ -99,11 +101,15 @@ function ContentListHeader({
               rel="noopener noreferrer"
               className="flex hover:underline items-center justify-start "
             >
-              <p className="text-sm pr-2">{message}</p>
+              <p className="text-sm pr-2">{srcInfo}</p>
               <FaExternalLinkAlt />
             </a>
           )}
         </div>
+        <p className=" px-1 absolute flex text-[10px] items-center gap-1 text-wrap text-end bottom-0 right-0">
+          {message}
+          <BiInfoCircle></BiInfoCircle>
+        </p>
         <div className="w-full mb-5 z-10 mx-2 flex justify-end items-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
           {loading && (
             <h1
@@ -149,7 +155,7 @@ ContentListHeader.propTypes = {
   flagError: PropTypes.string,
   loading: PropTypes.bool,
   error: PropTypes.string,
-  message: PropTypes.string,
+  srcInfo: PropTypes.string,
   link: PropTypes.string,
 };
 

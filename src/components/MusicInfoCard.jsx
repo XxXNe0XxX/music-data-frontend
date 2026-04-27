@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext, useState } from "react";
-import { LuEye } from "react-icons/lu";
-import { BiLike } from "react-icons/bi";
+import { LuCalendar, LuEye, LuWatch } from "react-icons/lu";
+import { BiHeadphone, BiLike } from "react-icons/bi";
 import { FaPlus, FaUser, FaUserFriends } from "react-icons/fa";
 import * as motion from "motion/react-client";
 import { abbreviateNumber } from "../utils/abbreviateNumber";
@@ -23,13 +23,17 @@ export default function MusicInfoCard({ songInfo, index }) {
   const trackUrl =
     songInfo.trackUrl || songInfo.track?.external_urls?.spotify || "#";
   const imageUrl =
-    songInfo.trackImageUrl || songInfo.track?.album?.images?.[1]?.url || "";
+    songInfo.trackImageUrl ||
+    songInfo.track?.album?.images?.[1]?.url ||
+    songInfo.imageUrl ||
+    "";
   const artists = songInfo.artists || songInfo.track?.artists || [];
   const streams = songInfo.streams;
   const peakPos = songInfo.peakPosition;
   const weeksOnChart = songInfo.weeksOnChart;
-  const position = songInfo.position;
+  const position = songInfo.rank;
   const posChange = songInfo.positionChange;
+  const relaseDate = songInfo.releaseDate;
 
   // Format a rough "date added" from today minus weeksOnChart, or omit
   const dateLabel =
@@ -182,15 +186,15 @@ export default function MusicInfoCard({ songInfo, index }) {
         >
           {streams !== undefined && streams !== null && (
             <span className="flex items-center gap-1">
-              <LuEye className="text-lg" />
+              <BiHeadphone className="text-lg" />
               {abbreviateNumber(streams)}
             </span>
           )}
           {/* Likes placeholder — BiLike kept from original */}
           <span className="flex items-center gap-1">
-            <MdOutlineHeadphones className="text-lg" />
-            {peakPos !== undefined && peakPos !== null
-              ? abbreviateNumber(Math.round(streams * 0.058)) /* approx ratio */
+            <LuCalendar className="text-lg" />
+            {relaseDate !== undefined && relaseDate !== null
+              ? relaseDate /* approx ratio */
               : "—"}
           </span>
 
@@ -245,6 +249,7 @@ MusicInfoCard.propTypes = {
     trackName: PropTypes.string,
     trackUrl: PropTypes.string,
     trackImageUrl: PropTypes.string,
+    imageUrl: PropTypes.string,
     artists: PropTypes.arrayOf(
       PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
     ),
