@@ -91,8 +91,8 @@ function ContentListHeader({
           />
         </button>
       </div>
-      <div className="flex justify-between items-end  w-full">
-        <div className="flex  justify-center  bottom-0 text-white backdrop-blur-xl p-1 rounded-md z-20 mb-5  ">
+      <div className="flex justify-between items-center  w-full mb-3">
+        <div className="flex  justify-center  text-white backdrop-blur-xl rounded-md z-20 mb-8 px-2 ">
           <ToggleTheme></ToggleTheme>
           {link && (
             <a
@@ -106,9 +106,9 @@ function ContentListHeader({
             </a>
           )}
         </div>
-        <p className=" px-1 absolute flex text-[10px] items-center gap-1 text-wrap text-end bottom-0 right-0">
+        <p className=" px-1 absolute flex text-[10px] items-center gap-1 text-nowrap text-end bottom-0 right-0 bg-yellow-600 shadow-md rounded-full m-1">
           {message}
-          <BiInfoCircle></BiInfoCircle>
+          <BiInfoCircle className=" rounded-full text-xl "></BiInfoCircle>
         </p>
         <div className="w-full mb-5 z-10 mx-2 flex justify-end items-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
           {loading && (

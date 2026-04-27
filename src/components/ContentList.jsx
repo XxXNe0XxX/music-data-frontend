@@ -94,9 +94,9 @@ function ContentList({ content, selectedCountry, loading, error }) {
           currentPlatform == "youtube"
             ? "Usually very fast, youtube regional restrictions apply"
             : currentPlatform == "spotify"
-              ? "It might be slow due to Spotify's charts auth system, not available for all countries"
+              ? "Fast but not in realtime, data is locally stored and fetched once a day"
               : currentPlatform.includes("netflix")
-                ? "Generally fast, images might not render after a while due to too many requests, not available for all countries"
+                ? "Generally fast, images might not render due requests limits, not available for all countries"
                 : ""
         }
         `}
