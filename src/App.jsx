@@ -143,7 +143,7 @@ function App() {
             className={`p-6 rounded-lg max-w-md mx-4 ${isDark ? "bg-gray-800 text-white" : "bg-white text-black"} shadow-xl`}
           >
             <h2 className="text-xl font-bold mb-4">
-              Welcome to Music Data Frontend!
+              Welcome to International Tube
             </h2>
             <p className="mb-4">
               This app displays popular content from YouTube, Spotify, and
